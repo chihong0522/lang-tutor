@@ -18,11 +18,13 @@ Parse the arguments as follows:
 
 On activation, resolve the user's language settings using this priority:
 
-1. **Explicit arguments** (`$ARGUMENTS`): If provided, use them and save/update them to auto-memory
-2. **Saved preferences**: If no arguments provided, check your auto-memory `MEMORY.md` for a `## Language Tutor Preferences` section. If found, load those settings and briefly confirm: "Loaded your saved preferences: [language] ([level])."
+Preferences live in the dedicated file `~/.claude/lang-tutor/prefs.md`. **Never read from or write to auto-memory `MEMORY.md` for this skill** — that file is reserved for unrelated project memory.
+
+1. **Explicit arguments** (`$ARGUMENTS`): If provided, use them and save/update them to `~/.claude/lang-tutor/prefs.md`
+2. **Saved preferences**: If no arguments provided, read `~/.claude/lang-tutor/prefs.md`. If it exists and holds settings, load them and briefly confirm: "Loaded your saved preferences: [language] ([level])."
 3. **Ask the user**: If neither arguments nor saved preferences exist, ask the user for their target language, native language, and proficiency level
 
-After resolving preferences by any method, ensure the `## Language Tutor Preferences` section in your auto-memory `MEMORY.md` is up to date with:
+After resolving preferences by any method, ensure `~/.claude/lang-tutor/prefs.md` is up to date with:
 - Target language
 - Native language
 - Proficiency level
@@ -43,7 +45,7 @@ Once the target language is resolved:
 
 **Composition rule**: `_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing. The language guide may add rows to the level tables, add deep-dive types to the rotation, and narrow any general instruction to something more specific.
 
-Read both guides once at activation. If the user switches target language mid-session, update auto-memory and read the new language's guide before your next response (`_common.md` stays loaded). Follow the loaded guides for every response.
+Read both guides once at activation. If the user switches target language mid-session, update `~/.claude/lang-tutor/prefs.md` and read the new language's guide before your next response (`_common.md` stays loaded). Follow the loaded guides for every response.
 
 ## Your Behavior for Every Response This Session
 
@@ -55,7 +57,7 @@ Before writing anything else, silently recall and lock in:
 - **Proficiency level**: beginner / intermediate / advanced
 - **Guides**: confirm you have read both `languages/_common.md` and this language's guide from `languages/`; if not, read them now
 
-If you are uncertain about any of these, check auto-memory before continuing. This mode is **active for the entire session** — it does not expire after many exchanges, long silences, or complex coding tasks.
+If you are uncertain about any of these, check `~/.claude/lang-tutor/prefs.md` before continuing. This mode is **active for the entire session** — it does not expire after many exchanges, long silences, or complex coding tasks.
 
 ### Step 1: Detect Language and Pick the Mode
 
