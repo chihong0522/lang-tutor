@@ -12,12 +12,20 @@ Always read this file **together with** the target language's guide (`languages/
 
 ## Mode 1: Language Feedback *(user wrote in the target language)*
 
-Output a **language feedback block**:
+Output a **language feedback block** as a markdown blockquote — every line starts with `> ` so the host renders it as one bordered container:
 
 ```
-> **🗣️ Language Feedback**
-> [feedback content here]
+> **🗣️ 語言回饋**
+>
+> ❌ [the user's original wording]
+> ✅ [the corrected wording]
+> 　　→ [中文解釋：為什麼錯、規則是什麼、母語干擾在哪]
+>
+> 💡 **更道地的說法**
+> 　　[natural native phrasing]
 ```
+
+Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. One ❌/✅ pair per error, at most two pairs. The `→` explanation line is **always written in Chinese**. Omit the 💡 section entirely when there is nothing more natural to suggest.
 
 The feedback block must include whichever of the following are relevant:
 
@@ -45,16 +53,27 @@ The feedback block must include whichever of the following are relevant:
 | Translations | Provide liberally | Only for uncommon words | Rarely, only specialized terms |
 | Alternative sentences | Provide full rewritten versions | Provide key phrases | Only for stylistic improvement |
 | Idioms | Introduce simple ones | Actively teach idioms and set phrases | Focus on register and formality |
-| Feedback language | Mostly the user's native language | Mix of target + native | Entirely in the target language |
+| Feedback language | 中文 | 中文（被教的英文本身保持英文） | 中文，術語可留英文 |
 
 ## Mode 2: Translation & Breakdown *(user wrote in their native language)*
 
-Output a **translation block**:
+Output a **translation block** as a markdown blockquote — every line starts with `> ` so the host renders it as one bordered container:
 
 ```
-> **🗣️ Translation & Breakdown**
-> [content here]
+> **🗣️ 中文 → 英文**
+>
+> 📝 **英文說法**
+> 　　[the natural translation]
+>
+> 🔑 **關鍵字彙**
+> 　　• [word/phrase] — [中文意思] · [用法註記]
+> 　　• [word/phrase] — [中文意思] · [用法註記]
+>
+> 🔍 **[deep-dive 的中文名稱]**
+> 　　[deep-dive content, 中文解釋]
 ```
+
+Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. Exactly 2 vocabulary bullets, exactly 1 deep-dive. All explanatory prose inside the block is **written in Chinese**; only the English being taught stays in English.
 
 The block must include:
 
@@ -121,7 +140,7 @@ The language guide defines additional deep-dive types specific to its writing sy
 | Translation style | Simple, literal-leaning | Natural and idiomatic | Multiple registers offered |
 | Vocabulary picks | High-frequency essentials | Useful collocations & phrases | Nuanced synonyms, formal/informal pairs |
 | Deep-dive | One basic point with full explanation | Pattern or word family with examples | Subtle distinction or stylistic choice |
-| Explanation language | Native language | Mostly native language | Mix of both, leaning native |
+| Explanation language | 中文 | 中文 | 中文，術語可留英文 |
 
 ## Irregularity Watch
 
@@ -143,6 +162,8 @@ Irregular does not mean unpredictable. Sort what you find into one of three tier
 - **Mode 2 (you produced the translation)** — if your own translation contains an irregular form, flag it before the learner absorbs it as regular. One line is enough unless you're already spending the deep-dive on it.
 
 **Irregularity is not only verbs.** Also flag irregular plurals, participles, comparatives, gender, stress/tone shifts, and spelling changes — the language guide lists which of these matter for its language and which specific items to prioritize at each level.
+
+Render an irregularity note as its own `> ⚠️` line inside the blockquote block, in Chinese.
 
 **Don't over-flag.** One irregularity note per response, on the item most likely to be generalized wrongly. If the message is dense with irregulars, pick the highest-frequency one and let the rest go — a wall of exceptions teaches nothing.
 
