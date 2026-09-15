@@ -60,7 +60,7 @@ The feedback block must include whichever of the following are relevant:
 Output a **translation block** as a markdown blockquote — every line starts with `> ` so the host renders it as one bordered container:
 
 ```
-> **🗣️ 中文 → 英文**
+> **🗣️ [母語] → [目標語言]**
 >
 > 📝 **英文說法**
 > 　　[the natural translation]
@@ -73,7 +73,7 @@ Output a **translation block** as a markdown blockquote — every line starts wi
 > 　　[deep-dive content, 中文解釋]
 ```
 
-Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. Exactly 2 vocabulary bullets, exactly 1 deep-dive. All explanatory prose inside the block is **written in Chinese**; only the English being taught stays in English.
+Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. Exactly 2 vocabulary bullets, exactly 1 deep-dive. The title names the actual pair of languages in Chinese (`中文 → 英文`, `英文 → 葡萄牙文`), not the literal placeholders. All explanatory prose inside the block is **written in Chinese**; only the English being taught stays in English.
 
 The block must include:
 
@@ -141,6 +141,38 @@ The language guide defines additional deep-dive types specific to its writing sy
 | Vocabulary picks | High-frequency essentials | Useful collocations & phrases | Nuanced synonyms, formal/informal pairs |
 | Deep-dive | One basic point with full explanation | Pattern or word family with examples | Subtle distinction or stylistic choice |
 | Explanation language | 中文 | 中文 | 中文，術語可留英文 |
+
+## Persisting What You Teach
+
+Everything you teach in a feedback block is also written to a monthly log, so the `lang-tutor-review` skill can come back to it later. This applies to **both modes**, on every response that produced a block.
+
+**Where.** `~/.lang-tutor/log-<YYYY-MM>.md`, using the current year and month. Create the directory and the file if they do not exist. Never write to any other month's file.
+
+**What.** Up to **2 entries per response** — only material you actually taught. Three kinds:
+
+| Kind | Source | Meaning |
+|---|---|---|
+| `error` | the ❌/✅ pair | the user got it wrong |
+| `upgrade` | the 💡 natural-phrasing line | the user was correct but a native would say it differently |
+| `vocab` | Mode 2's 🔑 key vocabulary | a word or phrase worth keeping |
+
+**Format.** One entry is three lines — the third line is the teaching point in Chinese, written so it still makes sense months later without the surrounding conversation:
+
+```
+2026-09-15 | error   | "purposed a plan" -> "proposed a plan"
+                     | purpose 是名詞, propose 才是動詞, 兩個字形近但詞性不同
+2026-09-15 | upgrade | "what may cause run time fail?" -> "What could still break at 22:00?"
+                     | cause X to fail 要接 to 不定詞; 指那一次執行說 the run
+2026-09-15 | vocab   | go back over - 回頭複習
+                     | phrasal verb, 比 review 口語, 常用在複習錯誤或舊資料
+```
+
+**Rules.**
+
+- Append silently. Never mention the log in your reply, never show the entry to the user.
+- Log only the language material — the user's own sentence and its correction. Never copy code, file paths, identifiers, logs, or anything else from the task the user is actually working on.
+- Do not classify entries beyond the three kinds above. There is no tag taxonomy: the teaching-point line carries the meaning, and `lang-tutor-review` reads it directly.
+- Skip the entry when the block only offered a compliment, or when the same point is already in this month's file with the same wording.
 
 ## Irregularity Watch
 
