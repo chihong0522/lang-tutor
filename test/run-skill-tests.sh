@@ -161,24 +161,24 @@ test_modes() {
   new_env
   run_claude "$SKILL Portuguese English Beginner" || return 1
   run_claude "Eu quero criar um arquivo chamado notes.txt com o texto ola" "$SESSION_ID" || return 1
-  assert_response_contains "Language Feedback" || return 1
+  assert_response_contains "語言回饋" || return 1
   run_claude "What does the ls command do?" "$SESSION_ID" || return 1
-  assert_response_contains "Translation & Breakdown" || return 1
+  assert_response_contains "關鍵字彙" || return 1
 }
 
-# Preferences persist to auto-memory and a bare invocation reloads them.
+# Preferences persist to the dedicated prefs file and a bare invocation reloads them.
 test_memory() {
   new_env
   run_claude "$SKILL Portuguese English Beginner" || return 1
-  # The init event reports this temp project's private auto-memory dir.
-  local memdir memfile
-  memdir="$(jq -r 'select(.type == "system" and .subtype == "init") | .memory_paths.auto // empty' "$OUT" | head -1)"
-  memfile="$memdir/MEMORY.md"
-  if [ ! -f "$memfile" ] || ! grep -qi "Language Tutor Preferences" "$memfile"; then
-    echo "  FAIL: no 'Language Tutor Preferences' section saved to auto-memory"
+  if [ ! -f "$PREFS_FILE" ] || ! grep -qi "portuguese" "$PREFS_FILE"; then
+    echo "  FAIL: preferences not saved to $PREFS_FILE"
     return 1
   fi
-  echo "  ok: preferences saved to auto-memory"
+  if grep -rqi "Language Tutor Preferences" "$(jq -r 'select(.type == "system" and .subtype == "init") | .memory_paths.auto // empty' "$OUT" | head -1)" 2>/dev/null; then
+    echo "  FAIL: preferences leaked into the project's auto-memory"
+    return 1
+  fi
+  echo "  ok: preferences saved to $PREFS_FILE, auto-memory untouched"
   # New session (no resume), bare invocation: must load saved prefs and
   # read both the spine and the portuguese guide again.
   run_claude "$SKILL" || return 1
@@ -190,6 +190,18 @@ test_memory() {
 
 ALL_TESTS="routing alias fallback modes memory"
 TESTS="${*:-$ALL_TESTS}"
+
+# The skill writes preferences to a fixed path under $HOME, so a test run would
+# otherwise overwrite the real user's settings. Snapshot and restore them.
+PREFS_FILE="$HOME/.lang-tutor/prefs.md"
+PREFS_BACKUP="$(mktemp /tmp/lang-tutor-prefs-backup.XXXXXX)"
+if [ -f "$PREFS_FILE" ]; then
+  cp "$PREFS_FILE" "$PREFS_BACKUP"
+  restore_prefs() { cp "$PREFS_BACKUP" "$PREFS_FILE"; rm -f "$PREFS_BACKUP"; }
+else
+  restore_prefs() { rm -f "$PREFS_FILE" "$PREFS_BACKUP"; }
+fi
+trap restore_prefs EXIT
 
 echo "model: $MODEL"
 for t in $TESTS; do
