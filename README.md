@@ -148,6 +148,28 @@ Then activate in any Claude Code session:
 /lang-tutor
 ```
 
+## Reviewing what you were taught
+
+Every feedback block is also appended to a monthly log at `~/.lang-tutor/log-<YYYY-MM>.md`, so the corrections do not disappear when the session ends. Three kinds of entry are kept: `error` (what you got wrong), `upgrade` (correct, but a native speaker would phrase it differently) and `vocab` (a word worth keeping). Each entry records the before/after pair plus the teaching point.
+
+Two skills read that log, and they are deliberately separate — reading through a digest and being put on the spot are different activities:
+
+```
+/lang-tutor-review                 # a digest: mistakes grouped by cause, nothing to answer
+/lang-tutor-review-test            # a drill: 3-5 questions, one at a time
+/lang-tutor-review-test 助動詞      # drill one category
+/lang-tutor-review-test hard       # full sentences, no hints (default is easy)
+/lang-tutor-review all             # either skill: read every log file
+```
+
+`lang-tutor-review` groups your entries into categories it derives from the material, explains each rule in the words you would use to catch yourself, and shows your own wrong/right pairs side by side. It ends by naming what to drill next. Nothing to reply to.
+
+`lang-tutor-review-test` takes one of those categories and makes you produce the correct form, in workplace situations — stand-ups, code review, MR descriptions, team chat. At the default `easy` level each question has exactly one thing wrong and tells you what kind; `hard` gives back the whole original sentence with no hints.
+
+There is no scoring and no tag taxonomy in either: the analysis is done by reading the entries, so a pattern that spans several different-looking mistakes still gets caught.
+
+The log is a plain local file. Nothing is uploaded, and only language material is written to it — never code, paths, or content from whatever you were actually working on.
+
 ## Proficiency levels
 
 | | Beginner | Intermediate | Advanced |
