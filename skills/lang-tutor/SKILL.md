@@ -18,13 +18,13 @@ Parse the arguments as follows:
 
 On activation, resolve the user's language settings using this priority:
 
-Preferences live in the dedicated file `~/.claude/lang-tutor/prefs.md`. **Never read from or write to auto-memory `MEMORY.md` for this skill** — that file is reserved for unrelated project memory.
+Preferences live in the dedicated file `~/.lang-tutor/prefs.md`. **Never read from or write to auto-memory `MEMORY.md` for this skill** — that file is reserved for unrelated project memory.
 
-1. **Explicit arguments** (`$ARGUMENTS`): If provided, use them and save/update them to `~/.claude/lang-tutor/prefs.md`
-2. **Saved preferences**: If no arguments provided, read `~/.claude/lang-tutor/prefs.md`. If it exists and holds settings, load them and briefly confirm: "Loaded your saved preferences: [language] ([level])."
+1. **Explicit arguments** (`$ARGUMENTS`): If provided, use them and save/update them to `~/.lang-tutor/prefs.md`
+2. **Saved preferences**: If no arguments provided, read `~/.lang-tutor/prefs.md`. If it exists and holds settings, load them and briefly confirm: "Loaded your saved preferences: [language] ([level])."
 3. **Ask the user**: If neither arguments nor saved preferences exist, ask the user for their target language, native language, and proficiency level
 
-After resolving preferences by any method, ensure `~/.claude/lang-tutor/prefs.md` is up to date with:
+After resolving preferences by any method, ensure `~/.lang-tutor/prefs.md` is up to date with:
 - Target language
 - Native language
 - Proficiency level
@@ -45,7 +45,7 @@ Once the target language is resolved:
 
 **Composition rule**: `_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing. The language guide may add rows to the level tables, add deep-dive types to the rotation, and narrow any general instruction to something more specific.
 
-Read both guides once at activation. If the user switches target language mid-session, update `~/.claude/lang-tutor/prefs.md` and read the new language's guide before your next response (`_common.md` stays loaded). Follow the loaded guides for every response.
+Read both guides once at activation. If the user switches target language mid-session, update `~/.lang-tutor/prefs.md` and read the new language's guide before your next response (`_common.md` stays loaded). Follow the loaded guides for every response.
 
 ## Your Behavior for Every Response This Session
 
@@ -57,7 +57,7 @@ Before writing anything else, silently recall and lock in:
 - **Proficiency level**: beginner / intermediate / advanced
 - **Guides**: confirm you have read both `languages/_common.md` and this language's guide from `languages/`; if not, read them now
 
-If you are uncertain about any of these, check `~/.claude/lang-tutor/prefs.md` before continuing. This mode is **active for the entire session** — it does not expire after many exchanges, long silences, or complex coding tasks.
+If you are uncertain about any of these, check `~/.lang-tutor/prefs.md` before continuing. This mode is **active for the entire session** — it does not expire after many exchanges, long silences, or complex coding tasks.
 
 ### Step 1: Detect Language and Pick the Mode
 
@@ -87,4 +87,11 @@ After the feedback block, proceed to handle the user's actual coding/task reques
 - **If the user writes in a third language** (neither target nor native), ask which language they'd like feedback on
 - **Respect the user's flow** — if a message is very short (e.g., "yes", "ok", "run it"), a one-line feedback note or just encouragement is sufficient
 - **Keep level calibration consistent** across both feedback modes
-- **Ignore missing accents, diacritics, and special characters** — these are hard to type on a standard keyboard in a coding environment. Do not flag missing accents (e.g., "nao" for "não", "cafe" for "café") as errors. Only correct actual grammar, word choice, or structure mistakes.
+- **Typing shortcuts are not mistakes** — the user is typing into a terminal while working, not writing prose. None of the following is an error, and none of them may be corrected, mentioned, or written to the log:
+  - **Missing accents and diacritics** — "nao" for "não", "cafe" for "café"
+  - **Dropped apostrophes in contractions** — "ill" for "I'll", "dont" for "don't", "wont", "cant", "its" for "it's", "im", "youre", "were", "thats", "lets". Read them as the contraction and move on
+  - **Lowercase `i`** for the pronoun "I", and lowercase sentence openings
+  - **Engineering shorthand** — impl, repo, env, config, deps, args, params, docs, msg, req/res, db, auth, spec, perf, prod, dev, infra, util, dir, ctx, err, pkg, lib, cmd, src, tmp, regex, PR, MR, CI, k8s, API, CLI, SDK, and any other standard abbreviation of a technical term
+  - **Chat shorthand** — u, r, ur, plz, thx, btw, imo, afaik, tbh, fyi, asap, lgtm, wip, ptal, nit
+  Correct only genuine grammar, word choice, or structure mistakes. If the shortened form is genuinely ambiguous in context, ask what was meant instead of treating it as an error.
+- **Do not turn a shortcut into a teaching point** — no "this is fine in chat but not in a document" asides. The user has already decided; repeating it is noise.
