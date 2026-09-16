@@ -1,19 +1,19 @@
 ---
 name: lang-tutor-review-test
 description: Drill what lang-tutor has taught you — picks one weakness from your feedback log and quizzes you on it, one question at a time, in workplace situations.
-user-invocable: true
-argument-hint: "[category] [easy|hard] [all]"
 ---
 
 # Language Tutor Review Test
 
 The practice half of the review. `lang-tutor-review` reads the log and explains; this skill takes one thing from it and makes the user produce the correct form themselves.
 
+This edition is for Traditional Chinese (zh-TW) speakers. Ignore any legacy native-language setting; explanations and quiz hints always use Traditional Chinese. Only English and Japanese are supported learning targets. Validate saved preferences using the target aliases in `../lang-tutor/SKILL.md` before loading `../lang-tutor/languages/_common.md` and the English or Japanese guide. If the saved target is unsupported, explain the restriction and direct the user to activate `$lang-tutor English` or `$lang-tutor Japanese` in Codex, or `/lang-tutor English` or `/lang-tutor Japanese` in Claude Code; stop without changing preferences or logs. Filter legacy logs to entries in the selected target language; ignore unrelated or ambiguous entries. Apply the empty-log or minimum-entry rule after filtering.
+
 ## Step 1: Read the Log and the Arguments
 
 Files are monthly: `~/.lang-tutor/log-<YYYY-MM>.md`. Read the current month and the previous month by default; read every `log-*.md` when `all` is given.
 
-Also read `~/.lang-tutor/prefs.md` for the target language, native language, and level, plus `languages/_common.md` and the target language's guide.
+Also read `~/.lang-tutor/prefs.md` for the target language, native language, and level, plus `../lang-tutor/languages/_common.md` and the target language's guide.
 
 Arguments, in any order:
 
@@ -27,7 +27,7 @@ Arguments, in any order:
 
 With no category argument, choose one yourself: the weakness whose repair unlocks the most. Prefer mistakes that stall a reader over ones that merely sound stiff, and prefer a root cause that several log entries share over a one-off slip.
 
-State it in one sentence in Chinese before the first question, plus one line on the rule being drilled. Three lines total — this skill is the practice, not the lecture. The full explanation is `lang-tutor-review`'s job.
+State it in one sentence in Traditional Chinese before the first question, plus one line on the rule being drilled. Three lines total — this skill is the practice, not the lecture. The full explanation is `lang-tutor-review`'s job.
 
 ## Step 3: Difficulty
 
@@ -46,7 +46,7 @@ If the user struggles twice in a row at `hard`, drop to `easy` for the rest of t
 
 Ask **3-5 questions, one at a time**, and wait for each answer before moving on. Never show the next question alongside feedback for the previous one.
 
-Questions are written in the target language; everything you say about them is in the user's native language.
+Questions are written in the target language; everything you say about them is in Traditional Chinese (zh-TW).
 
 Match the question to the entry kind:
 

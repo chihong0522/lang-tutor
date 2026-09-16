@@ -1,0 +1,23 @@
+{
+  "name": "lang-tutor",
+  "version": "1.2.0",
+  "description": "Learn English and Japanese with Traditional Chinese explanations in Codex or Claude Code.",
+  "author": {
+    "name": "samhamilton"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Language Tutor",
+    "shortDescription": "Practice English and Japanese while you work",
+    "developerName": "chihong0522",
+    "category": "Productivity",
+    "longDescription": "Learn English and Japanese with Traditional Chinese explanations in Codex or Claude Code.",
+    "defaultPrompt": [
+      "Use $lang-tutor English beginner",
+      "Use $lang-tutor Japanese beginner"
+    ],
+    "capabilities": [
+      "Interactive"
+    ]
+  }
+}

@@ -1,8 +1,6 @@
 ---
 name: lang-tutor-review
 description: Go over what lang-tutor has taught you — reads your feedback log, groups the mistakes into categories, and writes a study digest you can read straight through. No quiz.
-user-invocable: true
-argument-hint: "[all]"
 ---
 
 # Language Tutor Review
@@ -11,6 +9,8 @@ The user wants to go back over the corrections and suggestions lang-tutor has gi
 
 **This skill does not quiz.** It reads, sorts, and explains — the output is a digest the user reads straight through with no questions to answer and nothing to reply to. Practice lives in the separate `lang-tutor-review-test` skill; this one ends by pointing at it.
 
+This edition is for Traditional Chinese (zh-TW) speakers. Ignore any legacy native-language setting; explanations and quiz hints always use Traditional Chinese. Only English and Japanese are supported learning targets. Validate saved preferences using the target aliases in `../lang-tutor/SKILL.md` before loading `../lang-tutor/languages/_common.md` and the English or Japanese guide. If the saved target is unsupported, explain the restriction and direct the user to activate `$lang-tutor English` or `$lang-tutor Japanese` in Codex, or `/lang-tutor English` or `/lang-tutor Japanese` in Claude Code; stop without changing preferences or logs. Filter legacy logs to entries in the selected target language; ignore unrelated or ambiguous entries. Apply the empty-log or minimum-entry rule after filtering.
+
 ## Step 1: Read the Log
 
 Files are monthly: `~/.lang-tutor/log-<YYYY-MM>.md`.
@@ -18,9 +18,9 @@ Files are monthly: `~/.lang-tutor/log-<YYYY-MM>.md`.
 - **No argument** — read the current month and the previous month.
 - **`all`** — read every `log-*.md` file present.
 
-Each entry is three lines: date, kind (`error` / `upgrade` / `vocab`), the before/after pair, and a teaching point written in Chinese.
+Each entry is three lines: date, kind (`error` / `upgrade` / `vocab`), the before/after pair, and a teaching point written in Traditional Chinese.
 
-Also read `~/.lang-tutor/prefs.md` for the target language, native language, and level, and load `languages/_common.md` plus the target language's guide — the same two guides the tutor itself uses. The digest is written at the level recorded there.
+Also read `~/.lang-tutor/prefs.md` for the target language, native language, and level, and load `../lang-tutor/languages/_common.md` plus the target language's guide — the same two guides the tutor itself uses. The digest is written at the level recorded there.
 
 **If the log is empty**, say so, tell the user to keep writing in their target language so the tutor can collect some, and stop. With even a couple of entries a digest is still worth writing — there is no minimum, because nothing here depends on having enough material to quiz from.
 
@@ -32,7 +32,7 @@ Rules for good categories:
 
 - **Group by root cause, not by surface symptom.** A missing `do` in a direct question and an over-inverted embedded question belong together — one rule, two ways of getting it wrong. Say that explicitly when it happens; it is the most useful thing this skill produces.
 - **Three to six categories** for a typical log. If you have more, you are labelling symptoms; merge them. If you have one, you are being too coarse; split it.
-- **Name each category in Chinese**, in the words the user would use to catch themselves mid-sentence.
+- **Name each category in Traditional Chinese**, in the words the user would use to catch themselves mid-sentence.
 - **Order by cost, not by count.** A mistake that stalls the reader outranks one that merely sounds stiff, even if the stiff one appears more often.
 - `upgrade` and `vocab` entries get their own categories at the end — they are things to start using, not holes to plug.
 
@@ -53,7 +53,7 @@ Then close the digest with:
 
 ## Format
 
-Write in Chinese. Use headings and tables where they compress; the user reads terminal output and prefers scanning to prose.
+Write in Traditional Chinese (zh-TW). Use headings and tables where they compress; the user reads terminal output and prefers scanning to prose.
 
 Put each category's examples in a table so the wrong and right forms line up:
 

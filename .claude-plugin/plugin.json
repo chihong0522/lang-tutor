@@ -1,6 +1,6 @@
 {
   "name": "lang-tutor",
-  "description": "Turns Claude Code into a language learning environment. Get grammar corrections, idiom suggestions, and vocabulary translations while coding in your target language.",
+  "description": "English and Japanese tutoring for Traditional Chinese speakers in Codex and Claude Code.",
   "version": "1.2.0",
   "author": {
     "name": "samhamilton",

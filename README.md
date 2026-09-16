@@ -1,242 +1,86 @@
-# lang-tutor — Learn English (or Any Language) While You Code (Claude Code Plugin)
+# lang-tutor — 給繁體中文使用者的英文與日文助手
 
-**Turn every Claude Code session into a language lesson.**
+在 Codex 或 Claude Code 工作時順便練習英文或日文。所有文法解說、複習摘要與測驗提示使用繁體中文，例句保留目標語言。
 
-lang-tutor is a free, open-source Claude Code plugin/skill that helps you learn English while you code — along with Chinese, Japanese, Spanish, French, German, Korean, and more. It's built for the huge number of developers worldwide who already code in Claude Code every day and are also learning English as a second language: instead of a separate app or class, lang-tutor gives you real-time English grammar corrections, idiomatic suggestions, and vocabulary breakdowns on every message, without interrupting your coding flow.
+## 支援範圍
 
-If you've been searching for a way to practice English for programmers and developers, an English learning tool that doesn't require a separate app, or a Claude Code skill/plugin for learning English (or any other language) on the job, this is it.
+- 學習目標只有 **English** 與 **Japanese**；已移除其他語言指南與通用 fallback。
+- 母語固定為繁體中文（zh-TW），不用另外設定。
+- 日文讀音使用假名，不顯示羅馬字；僅替約 N2／N1 難字或特殊讀音標註假名，一般漢字不標音。此規則不代表學習程度設為 N2。
+- 英文或日文輸入：提供精簡文法修正與自然說法，再處理原本的工作。
+- 繁體中文輸入：提供目標語言翻譯與字彙說明，再處理工作。
+- beginner / intermediate / advanced 三種程度；省略時從前幾則訊息校準。
+- 保留慣用縮寫、聊天簡寫與省略大小寫，不把這些當成錯誤。
+- 舊設定若指定其他學習語言，會要求改選英文或日文，不會默默替換；舊母語設定則在有效啟動時更新為 zh-TW。
 
-## What it does
+## 安裝
 
-Learning English as a second language? Write in English and get instant, native-speaker-level corrections:
+### Codex
 
-```
-You: "I want to make a commit of the changes"
-
-> 🗣️ Language Feedback
-> 💡 A native speaker might say: "I want to commit the changes"
-> Close! "commit" already implies the changes — no need for "a commit of"
-```
-
-Write in your target language (Portuguese in this example) and get instant feedback:
-
-```
-You: "Eu quero fazer um commit das mudancas"
-
-> 🗣️ Language Feedback
-> 💡 A native speaker might say: "Eu quero commitar as alteracoes"
-> Natural and idiomatic — keep it up!
+```sh
+codex plugin marketplace add chihong0522/lang-tutor
+codex plugin add lang-tutor@lang-tutor-marketplace
 ```
 
-Write in your native language and get translations with vocabulary breakdowns:
+安裝或更新後開啟新對話；若清單未刷新，重新啟動 Codex。於對話中使用：
 
-```
-You: "Show me the git log"
-
-> 🗣️ Translation & Breakdown
-> Translation: Mostra o historico do git.
->
-> Key Vocabulary:
-> - mostrar — to show · command form: "mostra"
-> - historico — history/log · used for any kind of record
+```text
+$lang-tutor English beginner
+$lang-tutor Japanese beginner
+$lang-tutor
 ```
 
-Then Claude Code handles your actual request as usual. The language feedback is an addition, never a replacement.
+### Claude Code
 
-## Features
-
-- **Automatic language detection** — no need to toggle modes. Write in either language and get the right feedback
-- **Three proficiency levels** — beginner, intermediate, and advanced, each with calibrated feedback depth
-- **Aligned to real proficiency frameworks** — levels map to the standard your language actually uses (HSK, JLPT, TOPIK, CEFR/DELE/DELF/Goethe, ТРКИ, ulpan levels, BIPA…), each with an ordered grammar syllabus drawn from how the language is really taught
-- **Irregulars never slip past** — every guide sorts its irregular forms into three tiers (class irregular, locally irregular, fully irregular), because a learner who meets an irregular unflagged will generalize the wrong pattern
-- **Preference persistence** — your language, level, and native language are saved across sessions
-- **Works with any language** — dedicated guides for the most popular languages, plus a generic guide for everything else. If Claude speaks it, you can learn it
-- **Typing shortcuts are left alone** — dropped apostrophes (`dont`, `ill`), a lowercase `i`, engineering abbreviations (`impl`, `repo`, `env`) and chat shorthand (`u`, `btw`, `lgtm`) are read as intended, never corrected and never logged. You are typing in a terminal between tasks, not writing prose
-- **Corrections are kept** — every block is appended to a monthly log so the review skills can come back to it later
-- **Non-intrusive** — feedback appears in a compact block before the normal response. Your coding workflow stays intact
-
-## Why learn English (or any language) with Claude Code?
-
-Most language learning apps ask you to carve out separate time — a Duolingo streak, a flashcard deck, an app you have to remember to open. That's especially hard when you're a developer already writing English-language commit messages, code comments, and prompts all day. lang-tutor works differently: it rides along on time you're already spending in Claude Code. Every commit message, every question you ask, every plan you write becomes an opportunity to practice English or any other language you're learning — with zero extra time cost.
-
-This makes lang-tutor especially useful for non-native English speakers in tech, since English is already the working language of code, documentation, and most Claude Code sessions. You get corrected and coached in the exact English you actually use at work.
-
-## Supported languages
-
-English is fully supported as a dedicated target language — set it as your target and lang-tutor gives you real-time English corrections, idiom and phrasal-verb suggestions, and article/preposition coaching tuned for ESL learners of any native-language background. It's one of 25 languages with a dedicated tutor guide, each with language-specific error categories, deep-dives, and pitfall coverage:
-
-Each guide is aligned to the proficiency framework its learners actually encounter, so "beginner" and "advanced" map to concrete, published milestones rather than vague labels:
-
-| Language | Framework | Guide highlights |
-|---|---|---|
-| English | CEFR A1–C2 | Articles, prepositions, present perfect vs. simple past, phrasal verbs, ESL error patterns |
-| Chinese (Mandarin) | HSK 1–6 | Character/radical breakdowns, compound words, pinyin, measure words, 了 usage, tone sandhi, 多音字 |
-| Japanese | JLPT N5–N1 | Kanji breakdowns, politeness registers, particles, counters, godan/ichidan classing, keigo suppletion |
-| Korean | TOPIK 1–6 | Sino-Korean root families, speech levels, particles, two number systems, ㅂ/ㄷ/ㅅ/르 irregular classes |
-| Spanish | CEFR / DELE | ser/estar, preterite vs. imperfect, subjunctive triggers, false friends, stem-changing verbs |
-| French | CEFR / DELF–DALF | Gender agreement, passé composé vs. imparfait, tu/vous register, ablaut classes, homophone endings |
-| Italian | CEFR / CILS–CELI | essere/avere auxiliaries, preposition contractions, congiuntivo, the -isc- class, ci and ne |
-| Portuguese | CAPLE / CELPE-Bras | Brazilian/European variants, contractions, ser/estar/ficar, future subjunctive, personal infinitive |
-| German | CEFR / Goethe | Case system, word order, separable verbs, compound-noun breakdowns, ablaut classes, plural forms |
-| Dutch | CEFR / NT2 | de/het, verb-second vs. verb-final order, separable verbs, false friends, the 't kofschip rule |
-| Russian | ТРКИ / TORFL | Case system, verbal aspect pairs, root families, mobile stress, genitive plural |
-| Arabic | ACTFL / CEFR\* | Root-and-pattern tables, iḍāfa, non-human plural rule, MSA vs. dialects, weak roots, broken plurals |
-| Hindi | CEFR / ACTFL\* | Ergative ने, gender agreement, postpositions, Sanskrit/Persian register layers, irregular perfectives |
-| Turkish | CEFR / TÖMER | Vowel harmony, suffix-stack decomposition, var/yok, evidential -miş, consonant softening |
-| Vietnamese | Bậc 1–6 (MOET) | Tones, classifiers, kinship pronouns, compound words, Sino-Vietnamese doublets |
-| Polish | CEFR | 7-case system, aspect pairs, virile/non-virile plurals, palatalization, numeral agreement |
-| Thai | CU-TFL / CEFR | Tone breakdowns and tone *rules*, classifiers, topic-comment structure, register tiers |
-| Indonesian | BIPA 1–7 | Affix families (me-/di-/ber-/-kan), nasal assimilation, reduplication, voice choice |
-| Hebrew | Ulpan א–ו | Binyanim verb patterns, root-and-pattern tables, construct state, weak-root families |
-| Greek | CEFR / Ελληνομάθεια | 4-case declension, three genders, verb aspect stems, aorist formation, Greek-to-English cognates |
-| Ukrainian | CEFR / УМІ | 7-case system including the active vocative, aspect pairs, the о/е → і alternation |
-| Swedish | CEFR / SFI, Tisus | en/ett gender, definite suffixes, strict V2 word order, the four verb classes, plural declensions |
-| Persian (Farsi) | AZFA / CEFR | Ezafe chains, compound/light verbs, SOV order, را object marker, unguessable present stems |
-| Filipino (Tagalog) | CEFR / ACTFL\* | Actor/object-focus trigger system, ang/ng/sa particles, aspect via infix and reduplication, Taglish |
-| Bengali | CEFR / ACTFL\* | Three-tier honorific register (তুই/তুমি/আপনি), classifiers, no grammatical gender, stem-vowel classes |
-
-\* Arabic, Hindi, Filipino, and Bengali have no single dominant proficiency framework for foreign learners. Their guides say so explicitly and list the competing standards rather than implying a single ladder exists.
-
-Any other language (Swahili, Finnish, Zulu, ...) works through the generic guide, which provides the same feedback modes without language-specific tailoring.
-
-## How it works
-
-The skill is split for token efficiency. A slim `SKILL.md` handles your language status (target language, native language, level) and routing, then loads two files on demand from `skills/lang-tutor/languages/`:
-
-- **`_common.md`** — the shared spine: the two feedback modes and their block formats, the universal deep-dive types, the baseline level tables, and the Irregularity Watch that runs on every response
-- **`<your-language>.md`** — the language guide: script conventions, proficiency-framework alignment, an ordered grammar syllabus, the irregulars worth prioritizing, language-specific deep-dives, and pitfalls
-
-`_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing. Splitting them this way keeps each language file focused on what is actually specific to that language rather than repeating the same boilerplate 25 times.
-
-Your status is stored in `~/.lang-tutor/prefs.md`, so it persists across sessions and plugin updates. It deliberately stays out of Claude's auto-memory: that file is per-project and reserved for project notes, and anything under `~/.claude/` is treated as a sensitive path the skill is not allowed to write to. An optional `UserPromptSubmit` hook re-injects a one-line reminder on each message so tutor mode can't drift out of attention in long sessions; it costs ~60 tokens per message while active and emits nothing in sessions where lang-tutor was never activated.
-
-## Install
-
-### Via Plugin Marketplace
-
-```bash
+```text
 /plugin marketplace add chihong0522/lang-tutor
 /plugin install lang-tutor@lang-tutor-marketplace
+/lang-tutor English beginner
+/lang-tutor Japanese beginner
 ```
 
-### Direct Install from GitHub
+若有名稱衝突，可用 `/lang-tutor:lang-tutor`。省略參數會讀取保存的設定。舊的三參數寫法若包含 Chinese / Traditional Chinese / zh-TW，仍可相容。
 
-Clone the repo anywhere, then symlink the skill directory (it must be the `skills/lang-tutor` subdirectory, so the `languages/` guides come along):
+### 本機開發版本
 
-```bash
-git clone https://github.com/chihong0522/lang-tutor ~/lang-tutor
-ln -s ~/lang-tutor/skills/lang-tutor ~/.claude/skills/lang-tutor
+GitHub 安裝取得已發布的 repo 內容。本機尚未推送的修改可用隔離設定驗證：
+
+```sh
+CODEX_HOME=/tmp/lang-tutor-dev codex plugin marketplace add /absolute/path/to/lang-tutor
+CODEX_HOME=/tmp/lang-tutor-dev codex plugin add lang-tutor@lang-tutor-marketplace
+claude --plugin-dir /absolute/path/to/lang-tutor
 ```
 
-Then activate in any Claude Code session:
+Codex 與 Claude 共用 `skills/`，分別提供 `.codex-plugin/plugin.json` 與 `.claude-plugin/plugin.json`。Codex CLI 可以讀取此 repo 的 `.claude-plugin/marketplace.json`。
 
-```bash
-/lang-tutor
+## 複習與測驗
+
+| 功能 | Codex | Claude Code |
+|---|---|---|
+| 複習摘要 | `$lang-tutor-review` | `/lang-tutor-review` |
+| 逐題練習 | `$lang-tutor-review-test` | `/lang-tutor-review-test` |
+
+複習可加 `all` 讀取全部月份；測驗可加分類、`easy` 或 `hard`。兩種功能只採用目前英文或日文目標的紀錄，不會刪除舊紀錄。
+
+## 狀態與提醒
+
+設定保存在 `~/.lang-tutor/prefs.md`，學習回饋保存在 `~/.lang-tutor/log-YYYY-MM.md`。兩個工具使用相同位置；技能遵守各自的檔案權限，不修改專案 auto-memory。紀錄只保存語言學習內容，不複製程式碼、路徑或工作資料。
+
+Claude Code 提供選用的 `UserPromptSubmit` 提醒 hook；Codex 使用共用技能，不依賴此 Claude hook。每個新對話都先啟用 tutor；不要假設安裝後每個對話會自動開啟。
+
+## 驗證
+
+不呼叫模型的檢查：
+
+```sh
+python3 test/test_package.py
+bash -n test/run-skill-tests.sh
+bash -n hooks/lang-tutor-reminder.sh
+claude plugin validate .claude-plugin/plugin.json
 ```
 
-## Usage
+`test/run-skill-tests.sh` 是 Claude 的模型行為 smoke tests，需登入 Claude、jq 與 bc，會使用模型額度。涵蓋路由、日文別名、拒絕其他目標、回饋模式與設定保存；不代表 Codex 模型行為測試。測試會暫存並恢復偏好設定，但可能新增學習紀錄，因此請在獨立測試帳號或環境執行。
 
-```bash
-# Learning English, native language Spanish
-/lang-tutor English Spanish Beginner
+## 來源與授權
 
-# Start with explicit settings for another language
-/lang-tutor Portuguese English Advanced
-
-# Or just the language (defaults to English native, auto-detects level)
-/lang-tutor Japanese
-
-# After first use, just activate — it remembers your preferences
-/lang-tutor
-```
-
-## Reviewing what you were taught
-
-Every feedback block is also appended to a monthly log at `~/.lang-tutor/log-<YYYY-MM>.md`, so the corrections do not disappear when the session ends. Three kinds of entry are kept: `error` (what you got wrong), `upgrade` (correct, but a native speaker would phrase it differently) and `vocab` (a word worth keeping). Each entry records the before/after pair plus the teaching point.
-
-Two skills read that log, and they are deliberately separate — reading through a digest and being put on the spot are different activities:
-
-```
-/lang-tutor-review                 # a digest: mistakes grouped by cause, nothing to answer
-/lang-tutor-review-test            # a drill: 3-5 questions, one at a time
-/lang-tutor-review-test 助動詞      # drill one category
-/lang-tutor-review-test hard       # full sentences, no hints (default is easy)
-/lang-tutor-review all             # either skill: read every log file
-```
-
-`lang-tutor-review` groups your entries into categories it derives from the material, explains each rule in the words you would use to catch yourself, and shows your own wrong/right pairs side by side. It ends by naming what to drill next. Nothing to reply to.
-
-`lang-tutor-review-test` takes one of those categories and makes you produce the correct form, in workplace situations — stand-ups, code review, MR descriptions, team chat. At the default `easy` level each question has exactly one thing wrong and tells you what kind; `hard` gives back the whole original sentence with no hints.
-
-There is no scoring and no tag taxonomy in either: the analysis is done by reading the entries, so a pattern that spans several different-looking mistakes still gets caught.
-
-The log is a plain local file. Nothing is uploaded, and only language material is written to it — never code, paths, or content from whatever you were actually working on.
-
-## Proficiency levels
-
-| | Beginner | Intermediate | Advanced |
-|---|---|---|---|
-| Corrections | All errors with full explanations | Grammar precision focus | Subtle nuance only |
-| Translations | Provided liberally | Only uncommon words | Rarely, specialized terms |
-| Feedback language | Mix of target + native | Mostly target language | Entirely in target language |
-| Focus | Core grammar, vocabulary building | Idioms, common patterns | Register, formality, style |
-| Framework band | e.g. HSK 1–2, JLPT N5–N4, CEFR A1–A2 | HSK 3–4, JLPT N3–N2, CEFR B1–B2 | HSK 5–6, JLPT N1, CEFR C1–C2 |
-
-Each guide adds a grammar-focus row on top of these, listing the specific structures that belong at each band — so at HSK 1–2 you're working on 是/有/在 and measure words, while HSK 3–4 moves you to 了 vs. 过 and the 把 construction.
-
-## Examples
-
-> **Note** — these screenshots come from upstream and show the original English feedback blocks. This fork renders both modes as a bordered blockquote with a ❌/✅ contrast layout and Chinese explanations; the behaviour they illustrate is the same, the formatting is not.
-
-### Translation & Breakdown (Chinese, Beginner)
-Write in English and get a full translation with vocabulary and grammar concepts tailored to your level.
-
-![Chinese beginner — Translation & Breakdown mode](LangTutorScreenshots/chinese-beginner-translation.png)
-
-### Language Feedback (Portuguese, Beginner)
-Write in your target language and get detailed grammar corrections with explanations.
-
-![Portuguese beginner — Language Feedback mode](LangTutorScreenshots/portuguese-beginner-feedback.png)
-
-### Coding Workflow Integration (Chinese, Advanced)
-Language feedback appears alongside your normal coding tasks — it never gets in the way.
-
-![Chinese advanced — feedback alongside coding](LangTutorScreenshots/chinese-advanced-coding.png)
-
-### Advanced Nuance (Italian, Advanced)
-At higher levels, feedback focuses on register, word choice, and subtle distinctions.
-
-![Italian advanced — nuanced concept spotlight](LangTutorScreenshots/italian-advanced-nuance.png)
-
-## FAQ
-
-**Can I really learn a language just by using Claude Code?**
-lang-tutor won't replace focused study, but it adds consistent, low-effort exposure — corrections and vocabulary in context, every session, with no extra app to open. It's best paired with other study, not a full substitute for it.
-
-**Does this slow down or interrupt my coding workflow?**
-No. Language feedback appears as a compact block before Claude's normal response. Claude Code still handles your actual request as usual.
-
-**Can I use lang-tutor to learn English as a second language?**
-Yes — set English as your target language (`/lang-tutor English <your native language>`) and lang-tutor corrects your English in real time as you write commit messages, ask questions, and describe tasks in Claude Code, at whatever proficiency level you set.
-
-**What languages does lang-tutor support?**
-25 languages with dedicated tutor guides: English, Chinese, Japanese, Korean, Spanish, French, Italian, Portuguese, German, Dutch, Russian, Arabic, Hindi, Turkish, Vietnamese, Polish, Thai, Indonesian, Hebrew, Greek, Ukrainian, Swedish, Persian (Farsi), Filipino (Tagalog), and Bengali — plus a generic guide that works for any other language Claude speaks.
-
-**Is lang-tutor free?**
-Yes, it's free and open source under the MIT license. Install it as a Claude Code plugin or clone it directly from GitHub.
-
-**Do I need to know the language already?**
-No. lang-tutor supports beginner, intermediate, and advanced proficiency levels, with feedback depth calibrated to each.
-
-## How this fork differs from upstream
-
-[hamsamilton/lang-tutor](https://github.com/hamsamilton/lang-tutor) is the original. This fork changes four things:
-
-- **Preferences moved out of auto-memory.** Upstream writes a `## Language Tutor Preferences` section into the project's `MEMORY.md`. That file is for project notes, and writes under `~/.claude/` are refused as sensitive anyway, so state lives in `~/.lang-tutor/` here.
-- **Feedback blocks are zh-TW.** Both modes render as a blockquote with a ❌/✅ contrast layout, and explanations are written in Chinese at every proficiency level.
-- **Corrections are logged and reviewable.** Upstream teaches and forgets; this fork appends to a monthly log and adds `lang-tutor-review` and `lang-tutor-review-test`.
-- **Typing shortcuts are not corrected.** See Features.
-
-## License
-
-MIT
+本 fork 源自 [hamsamilton/lang-tutor](https://github.com/hamsamilton/lang-tutor)，保留 MIT 授權。此版本聚焦繁體中文母語者的英文／日文學習，支援 Codex 與 Claude Code，並保留回饋紀錄與複習功能。

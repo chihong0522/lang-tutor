@@ -19,7 +19,7 @@
 # Env:
 #   LANG_TUTOR_TEST_MODEL  model for test runs (default: haiku, cheapest)
 #
-# Available tests: routing, alias, fallback, modes, memory
+# Available tests: routing, alias, unsupported, modes, memory
 
 set -uo pipefail
 
@@ -127,50 +127,46 @@ run_test() {
 # loaded only the language guide would look correct here but tutor incorrectly.
 test_routing() {
   new_env
-  run_claude "$SKILL Portuguese English Beginner" || return 1
+  run_claude "$SKILL English Beginner" || return 1
   assert_read "languages/_common.md" || return 1
-  assert_read "languages/portuguese.md" || return 1
+  assert_read "languages/english.md" || return 1
 }
 
-# Language-name aliases normalize ("Mandarin" -> chinese.md).
+# Language-name aliases normalize ("日本語" -> japanese.md).
 test_alias() {
   new_env
-  run_claude "$SKILL Mandarin English Beginner" || return 1
+  run_claude "$SKILL 日本語 Beginner" || return 1
   assert_read "languages/_common.md" || return 1
-  assert_read "languages/chinese.md" || return 1
+  assert_read "languages/japanese.md" || return 1
 }
 
-# Unlisted language falls back to generic.md and never creates a new file.
-# The spine must still load — generic.md relies on it exactly as the dedicated
-# guides do.
-test_fallback() {
+# Unsupported targets must not activate tutoring or alter saved preferences.
+test_unsupported() {
   new_env
-  run_claude "$SKILL Swahili English Beginner" || return 1
-  assert_read "languages/_common.md" || return 1
-  assert_read "languages/generic.md" || return 1
-  if [ -e "$SKILL_DIR/languages/swahili.md" ]; then
-    echo "  FAIL: a swahili.md was created — fallback should never write new guides"
-    rm -f "$SKILL_DIR/languages/swahili.md"
-    return 1
-  fi
-  echo "  ok: no swahili.md created"
+  mkdir -p "$(dirname "$PREFS_FILE")"
+  printf 'Target language: English\nNative language: Traditional Chinese (zh-TW)\nProficiency level: beginner\n' > "$PREFS_FILE"
+  cp "$PREFS_FILE" "$TMP/prefs-before.md"
+  run_claude "$SKILL Swahili Beginner" || return 1
+  assert_response_contains "English\|英文\|英語" || return 1
+  assert_response_contains "Japanese\|日文\|日本語" || return 1
+  cmp -s "$PREFS_FILE" "$TMP/prefs-before.md" || { echo "FAIL: unsupported target changed preferences"; return 1; }
 }
 
 # Both feedback modes fire on follow-up turns in the same session.
 test_modes() {
   new_env
-  run_claude "$SKILL Portuguese English Beginner" || return 1
-  run_claude "Eu quero criar um arquivo chamado notes.txt com o texto ola" "$SESSION_ID" || return 1
+  run_claude "$SKILL English Beginner" || return 1
+  run_claude "I wants to learn English" "$SESSION_ID" || return 1
   assert_response_contains "語言回饋" || return 1
-  run_claude "What does the ls command do?" "$SESSION_ID" || return 1
+  run_claude "請解釋這個指令的用途" "$SESSION_ID" || return 1
   assert_response_contains "關鍵字彙" || return 1
 }
 
 # Preferences persist to the dedicated prefs file and a bare invocation reloads them.
 test_memory() {
   new_env
-  run_claude "$SKILL Portuguese English Beginner" || return 1
-  if [ ! -f "$PREFS_FILE" ] || ! grep -qi "portuguese" "$PREFS_FILE"; then
+  run_claude "$SKILL English Beginner" || return 1
+  if [ ! -f "$PREFS_FILE" ] || ! grep -qi "english" "$PREFS_FILE"; then
     echo "  FAIL: preferences not saved to $PREFS_FILE"
     return 1
   fi
@@ -180,15 +176,15 @@ test_memory() {
   fi
   echo "  ok: preferences saved to $PREFS_FILE, auto-memory untouched"
   # New session (no resume), bare invocation: must load saved prefs and
-  # read both the spine and the portuguese guide again.
+  # read both the spine and the English guide again.
   run_claude "$SKILL" || return 1
   assert_read "languages/_common.md" || return 1
-  assert_read "languages/portuguese.md" || return 1
+  assert_read "languages/english.md" || return 1
 }
 
 # --- main --------------------------------------------------------------------
 
-ALL_TESTS="routing alias fallback modes memory"
+ALL_TESTS="routing alias unsupported modes memory"
 TESTS="${*:-$ALL_TESTS}"
 
 # The skill writes preferences to a fixed path under $HOME, so a test run would
