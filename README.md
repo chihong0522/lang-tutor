@@ -51,6 +51,8 @@ Then Claude Code handles your actual request as usual. The language feedback is 
 - **Irregulars never slip past** — every guide sorts its irregular forms into three tiers (class irregular, locally irregular, fully irregular), because a learner who meets an irregular unflagged will generalize the wrong pattern
 - **Preference persistence** — your language, level, and native language are saved across sessions
 - **Works with any language** — dedicated guides for the most popular languages, plus a generic guide for everything else. If Claude speaks it, you can learn it
+- **Typing shortcuts are left alone** — dropped apostrophes (`dont`, `ill`), a lowercase `i`, engineering abbreviations (`impl`, `repo`, `env`) and chat shorthand (`u`, `btw`, `lgtm`) are read as intended, never corrected and never logged. You are typing in a terminal between tasks, not writing prose
+- **Corrections are kept** — every block is appended to a monthly log so the review skills can come back to it later
 - **Non-intrusive** — feedback appears in a compact block before the normal response. Your coding workflow stays intact
 
 ## Why learn English (or any language) with Claude Code?
@@ -106,15 +108,15 @@ The skill is split for token efficiency. A slim `SKILL.md` handles your language
 
 `_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing. Splitting them this way keeps each language file focused on what is actually specific to that language rather than repeating the same boilerplate 25 times.
 
-Your status is stored in Claude's auto-memory, so it persists across sessions and plugin updates. An optional `UserPromptSubmit` hook re-injects a one-line reminder on each message so tutor mode can't drift out of attention in long sessions; it costs ~60 tokens per message while active and emits nothing in sessions where lang-tutor was never activated.
+Your status is stored in `~/.lang-tutor/prefs.md`, so it persists across sessions and plugin updates. It deliberately stays out of Claude's auto-memory: that file is per-project and reserved for project notes, and anything under `~/.claude/` is treated as a sensitive path the skill is not allowed to write to. An optional `UserPromptSubmit` hook re-injects a one-line reminder on each message so tutor mode can't drift out of attention in long sessions; it costs ~60 tokens per message while active and emits nothing in sessions where lang-tutor was never activated.
 
 ## Install
 
 ### Via Plugin Marketplace
 
 ```bash
-/plugin marketplace add hamsamilton/lang-tutor
-/plugin install lang-tutor@hamsamilton-lang-tutor
+/plugin marketplace add chihong0522/lang-tutor
+/plugin install lang-tutor@lang-tutor-marketplace
 ```
 
 ### Direct Install from GitHub
@@ -122,7 +124,7 @@ Your status is stored in Claude's auto-memory, so it persists across sessions an
 Clone the repo anywhere, then symlink the skill directory (it must be the `skills/lang-tutor` subdirectory, so the `languages/` guides come along):
 
 ```bash
-git clone https://github.com/hamsamilton/lang-tutor ~/lang-tutor
+git clone https://github.com/chihong0522/lang-tutor ~/lang-tutor
 ln -s ~/lang-tutor/skills/lang-tutor ~/.claude/skills/lang-tutor
 ```
 
@@ -184,6 +186,8 @@ Each guide adds a grammar-focus row on top of these, listing the specific struct
 
 ## Examples
 
+> **Note** — these screenshots come from upstream and show the original English feedback blocks. This fork renders both modes as a bordered blockquote with a ❌/✅ contrast layout and Chinese explanations; the behaviour they illustrate is the same, the formatting is not.
+
 ### Translation & Breakdown (Chinese, Beginner)
 Write in English and get a full translation with vocabulary and grammar concepts tailored to your level.
 
@@ -223,6 +227,15 @@ Yes, it's free and open source under the MIT license. Install it as a Claude Cod
 
 **Do I need to know the language already?**
 No. lang-tutor supports beginner, intermediate, and advanced proficiency levels, with feedback depth calibrated to each.
+
+## How this fork differs from upstream
+
+[hamsamilton/lang-tutor](https://github.com/hamsamilton/lang-tutor) is the original. This fork changes four things:
+
+- **Preferences moved out of auto-memory.** Upstream writes a `## Language Tutor Preferences` section into the project's `MEMORY.md`. That file is for project notes, and writes under `~/.claude/` are refused as sensitive anyway, so state lives in `~/.lang-tutor/` here.
+- **Feedback blocks are zh-TW.** Both modes render as a blockquote with a ❌/✅ contrast layout, and explanations are written in Chinese at every proficiency level.
+- **Corrections are logged and reviewable.** Upstream teaches and forgets; this fork appends to a monthly log and adds `lang-tutor-review` and `lang-tutor-review-test`.
+- **Typing shortcuts are not corrected.** See Features.
 
 ## License
 
