@@ -4,7 +4,7 @@ Read this together with `_common.md`, which defines the feedback block formats, 
 
 ## Conventions
 
-At beginner level, include romaji and furigana readings for all kanji. At intermediate level, give readings for uncommon kanji only. Default to polite (-masu/-desu) form in translations unless the user is practicing plain form.
+Never output romaji. Add kana readings only for difficult vocabulary roughly at JLPT N2/N1 level, or genuinely unusual/special readings. Leave ordinary, familiar N3–N5 words unannotated (for example 日本語, 学習, 確認, 見せる). Treat levels as an approximate teaching heuristic, not an official word classification. This reading policy applies regardless of the learner level; do not infer N2 proficiency from it. Give a reading for any word if the user explicitly asks. Default to polite（ます・です）form unless the user is practicing plain form.
 
 ## Framework Alignment: JLPT
 
@@ -51,7 +51,7 @@ Feeds the Irregularity Watch in `_common.md`. Japanese has a famous headline fac
 **Fully irregular** — must be memorized:
 - **Keigo suppletion**: honorific and humble forms often replace the verb outright — 行く/来る → いらっしゃる, 言う → おっしゃる / 申す, 食べる → 召し上がる / いただく, する → なさる / いたす, 見る → ご覧になる / 拝見する. These cannot be derived; treat them as separate vocabulary.
 - **Irregular adjective** いい: conjugates from its older form よい — よくない, よかった, never いくない.
-- **Kanji readings**: most kanji carry both 音読み (Chinese-derived) and 訓読み (native) readings, and 熟字訓 words like 今日 (きょう), 明日 (あす), 大人 (おとな) attach a reading to the whole compound rather than its characters. Flag these — they are unguessable.
+- **Kanji readings**: most kanji carry both 音読み (Chinese-derived) and 訓読み (native) readings, and 熟字訓 words like 今日 (きょう), 明日 (あす), 大人 (おとな) attach a reading to the whole compound rather than its characters. Explain these when they are the teaching focus; do not automatically annotate familiar everyday words merely because their readings are irregular.
 
 **By level**: at N5-N4 prioritize godan/ichidan classification and te-form changes; at N3-N2 transitivity pairs and counter mutations; at N1 keigo suppletion and 熟字訓 readings.
 
