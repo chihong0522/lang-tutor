@@ -13,6 +13,99 @@
 - 保留慣用縮寫、聊天簡寫與省略大小寫，不把這些當成錯誤。
 - 舊設定若指定其他學習語言，會要求改選英文或日文，不會默默替換；舊母語設定則在有效啟動時更新為 zh-TW。
 
+## 使用畫面
+
+以下是實際的輸出格式，Codex 與 Claude Code 相同。語言回饋會先出現，接著才是原本的工作回覆。
+
+### 用英文下指令 → 語言回饋
+
+> Why build fail? And is suitable for our repo?
+
+> **🗣️ 語言回饋**
+>
+> ❌ Why build fail?
+> ✅ Why did the build fail?
+> 　　→ 英文問句要有助動詞 did 撐起時態，主要動詞回原形；特定那一次 build 要加 the。中文問句不換語序，是主要干擾來源
+>
+> ❌ And is suitable for our repo?
+> ✅ And is it suitable for our repo?
+> 　　→ 英文子句不能省略主詞，要補 it
+>
+> 💡 **更道地的說法**
+> 　　Why did the build fail, and would this approach work for our repo?
+
+### 用中文下指令 → 翻譯與拆解
+
+> 幫我確認這個改動會不會影響到其他功能
+
+> **🗣️ 繁體中文 → 英文**
+>
+> 📝 **目標語言說法**
+> 　　Can you double-check whether this change affects anything else?
+>
+> 🔑 **關鍵字彙**
+> 　　• double-check — 再確認一次 · 比 confirm 口語，後面接 whether / that 子句
+> 　　• affect — 影響 · 動詞；名詞是 effect，兩者常被混用
+>
+> 🔍 **間接問句**
+> 　　「會不會…」放在 check / know / confirm 後面時用 whether 引導，並改回陳述語序：whether this change affects，不是 whether does this change affect
+
+### `/lang-tutor-review` → 複習摘要
+
+讀取 `~/.lang-tutor/log-*.md`，依根本原因分類，並列出你自己寫過的句子。不出題，也不需要回覆。
+
+<details>
+<summary>展開範例</summary>
+
+> ## 1. 問句沒有 do/does/did 撐住（6 筆）
+>
+> **規則**：送出問句前，先看句中有沒有 do/does/did/is/can，而且它要放在主詞前面。如果是嵌在 know / confirm 後面的間接問句，就改用 whether 加陳述語序。
+> **為什麼**：中文問句只在句尾加「嗎」，語序不變，所以會出現兩種方向相反的錯：直接問句忘了倒裝，間接問句反而多倒裝了。
+>
+> | ❌ 你寫的 | ✅ 正確 |
+> |---|---|
+> | why build fail? | Why did the build fail? |
+> | what kind of linker we used before? | What kind of linker did we use before? |
+> | wanna confirm do we really need it | I want to confirm whether we really need it |
+>
+> ## 2. 冠詞 the / a / an（4 筆）
+> …
+>
+> ## 已經在改善的
+> - 「let 接第二個動詞」只出現在月初，之後沒再出現
+>
+> ## 還沒自己用過的
+> - `double-check`、`side effect`、`walk me through`
+>
+> ## 下一步
+> 先練「問句的助動詞」：`/lang-tutor-review-test 助動詞`
+
+</details>
+
+### `/lang-tutor-review-test` → 逐題練習
+
+從紀錄挑出一個弱點，一次問一題，題目都放在工作情境裡。預設是 `easy`：每題只有一個錯，並且會告訴你是哪一類錯。
+
+<details>
+<summary>展開範例</summary>
+
+> **目標**：問句的助動詞。你的紀錄裡有 6 筆問句缺 do/does/did。
+> **規則**：wh- 問句要把助動詞放到主詞前面，主要動詞回原形。
+>
+> **第 1 題（code review）**：這句的助動詞有問題，改一下
+> 　　What kind of linker we used before?
+
+使用者回答：
+
+> What kind of linker did we use before?
+
+> **正確。** did 提前、use 回原形，兩點都對。這個句型你在紀錄裡錯過兩次，這次自己改對了。
+>
+> **第 2 題（stand-up）**：填空
+> 　　Why ___ the test fail on CI yesterday?
+
+</details>
+
 ## 安裝
 
 ### Codex
