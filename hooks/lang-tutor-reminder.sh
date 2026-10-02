@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# UserPromptSubmit hook for lang-tutor.
+# UserPromptSubmit and SessionEnd hook for lang-tutor.
 #
-# Fires on every message the user sends. If lang-tutor was activated in this
-# session, re-injects a one-line reminder (plus the saved language preferences) as context, so the tutor mode cannot drift out of the model's
-# attention in long sessions. Costs ~60 tokens per message while active;
-# emits nothing in sessions where lang-tutor was never activated.
+# Codex tracks activation in PLUGIN_DATA by session_id instead of parsing its
+# unstable transcript format. Claude Code keeps using the transcript marker.
+# Reminders are silent until the user explicitly activates $lang-tutor.
 set -uo pipefail
 
 input="$(cat)"
@@ -19,12 +18,43 @@ json_field() {
   fi
 }
 
-transcript="$(json_field transcript_path)"
+event="$(json_field hook_event_name)"
+session_id="$(json_field session_id)"
+prompt="$(json_field prompt)"
 
-# Only remind when lang-tutor was activated in this session: activation
-# injects the skill's "# Language Tutor Mode" header into the transcript.
-[ -n "$transcript" ] && [ -f "$transcript" ] || exit 0
-grep -q 'Language Tutor Mode' "$transcript" 2>/dev/null || exit 0
+# SessionEnd only manages Codex's plugin-local activation marker.
+if [ "$event" = "SessionEnd" ] && [ -z "${PLUGIN_DATA:-}" ]; then
+  exit 0
+fi
+
+# Codex provides PLUGIN_DATA and a session_id. Keep activation state scoped to
+# that conversation; do not rely on Codex's non-stable transcript format.
+if [ -n "${PLUGIN_DATA:-}" ] && [ -n "$session_id" ]; then
+  # Keep the session id inside the plugin's state directory when used as a path.
+  safe_session_id="${session_id//[^a-zA-Z0-9_-]/_}"
+  state_dir="${PLUGIN_DATA}/lang-tutor/sessions"
+  state_file="$state_dir/$safe_session_id.active"
+
+  if [ "$event" = "SessionEnd" ]; then
+    rm -f "$state_file"
+    exit 0
+  fi
+
+  case "$prompt" in
+    '$lang-tutor'|'$lang-tutor '*|'$lang-tutor:lang-tutor'|'$lang-tutor:lang-tutor '*|'[$lang-tutor:lang-tutor]'*)
+      if mkdir -p "$state_dir" 2>/dev/null; then
+        : > "$state_file"
+      fi
+      ;;
+  esac
+
+  [ -f "$state_file" ] || exit 0
+else
+  # Claude Code exposes the transcript marker after loading the skill.
+  transcript="$(json_field transcript_path)"
+  [ -n "$transcript" ] && [ -f "$transcript" ] || exit 0
+  grep -q 'Language Tutor Mode' "$transcript" 2>/dev/null || exit 0
+fi
 
 # Preferences are shared by both supported hosts; do not use Claude auto-memory.
 prefs=""
@@ -32,5 +62,5 @@ if [ -f "$HOME/.lang-tutor/prefs.md" ]; then
   prefs="$(tr '\n' ' ' < "$HOME/.lang-tutor/prefs.md")"
 fi
 
-printf 'Reminder: lang-tutor mode is active this session. Before handling this message, apply the lang-tutor skill: detect the message language, output the feedback block per the loaded guides (languages/_common.md plus the target language guide), then handle the request normally. %s\n' "${prefs:+Saved preferences: $prefs}"
+printf 'Reminder: lang-tutor mode is active in this session. Before handling this message, apply the lang-tutor skill: detect the message language, use the loaded guides (languages/_common.md plus the target language guide), give concise feedback in Traditional Chinese, then handle the request normally. If the guide contents are no longer available in context, read them from the installed skill. %s\n' "${prefs:+Saved preferences: $prefs}"
 exit 0
