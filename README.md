@@ -159,7 +159,12 @@ Codex 與 Claude 共用 `skills/`，分別提供 `.codex-plugin/plugin.json` 與
 
 設定保存在 `~/.lang-tutor/prefs.md`，學習回饋保存在 `~/.lang-tutor/log-YYYY-MM.md`。兩個工具使用相同位置；技能遵守各自的檔案權限，不修改專案 auto-memory。紀錄只保存語言學習內容，不複製程式碼、路徑或工作資料。
 
-Claude Code 提供選用的 `UserPromptSubmit` 提醒 hook；Codex 使用共用技能，不依賴此 Claude hook。每個新對話都先啟用 tutor；不要假設安裝後每個對話會自動開啟。
+兩個 host 都提供選用的 `UserPromptSubmit` 提醒 hook：
+
+- **Codex**：偵測該對話中的明確 `$lang-tutor` 啟用指令，之後每則訊息補上 tutor 提醒；對話結束時清除啟用狀態。狀態以 Codex plugin 的 `PLUGIN_DATA` 儲存，不解析不穩定的 transcript 格式。
+- **Claude Code**：檢查 transcript 是否載入 `Language Tutor Mode` 標記，再補上提醒。
+
+Codex 安裝後須在 hook trust review 中檢查並信任目前版本的 hook 定義，否則 hook 不會執行。啟用 plugin 或安裝技能不會自動啟用 tutor；每個新對話仍須使用 `$lang-tutor` 或 `/lang-tutor` 明確啟動。
 
 ## 驗證
 

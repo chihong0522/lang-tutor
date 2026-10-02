@@ -1,11 +1,12 @@
 {
   "name": "lang-tutor",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Learn English and Japanese with Traditional Chinese explanations in Codex or Claude Code.",
   "author": {
     "name": "samhamilton"
   },
   "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Language Tutor",
     "shortDescription": "Practice English and Japanese while you work",

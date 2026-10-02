@@ -15,7 +15,7 @@ Parse the invocation as target language followed by optional proficiency level:
 
 ## Host Compatibility
 
-The same skills run in Codex and Claude Code. Invoke `$lang-tutor` in Codex or `/lang-tutor` in Claude Code (plugin-qualified `/lang-tutor:lang-tutor` when needed). For review skills use the same host-specific prefix. Resolve all language guides relative to this skill directory, never the project working directory. Preferences and logs use `~/.lang-tutor/` on both hosts. The optional Claude reminder hook is not required for activation; do not rely on it in Codex. Follow the host's file permissions when saving preferences or logs.
+The same skills run in Codex and Claude Code. Invoke `$lang-tutor` in Codex or `/lang-tutor` in Claude Code (plugin-qualified `/lang-tutor:lang-tutor` when needed). For review skills use the same host-specific prefix. Resolve all language guides relative to this skill directory, never the project working directory. Preferences and logs use `~/.lang-tutor/` on both hosts. Optional reminder hooks reinforce an already activated session; they do not activate tutor mode by themselves. If a host has not trusted or enabled its hook, invoke the skill directly and continue using it. Follow the host's file permissions when saving preferences or logs.
 
 ## Preference Persistence
 

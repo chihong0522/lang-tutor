@@ -1,7 +1,7 @@
 {
   "name": "lang-tutor",
   "description": "English and Japanese tutoring for Traditional Chinese speakers in Codex and Claude Code.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "samhamilton",
     "url": "https://github.com/hamsamilton"
