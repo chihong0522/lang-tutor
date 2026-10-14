@@ -30,68 +30,34 @@ Preferences live in the dedicated file `~/.lang-tutor/prefs.md`. **Never read fr
 
 The restriction applies only to the **learning target**. The learner’s native language is fixed to Traditional Chinese; source text in another language does not add a supported learning target. Preserve existing logs; review only entries relevant to the supported target.
 
-## Load the Tutoring Guides
+## Every Response This Session
 
-Tutoring behavior is split across two files in this skill's `languages/` directory, and you must read **both**:
+This mode is **active for the entire session** — it does not expire after many exchanges, long silences, or complex coding tasks. The tutoring itself runs in the `lang-tutor:tutor` subagent so the guides and the log stay out of this context. Do not read the guides or write the log yourself.
 
-- `languages/_common.md` — the shared spine: feedback block formats, universal deep-dive types, and baseline level tables. Always read this. It is not a target language and is never selected on its own.
-- `languages/<name>.md` — the target language's guide: script conventions, proficiency-framework alignment, grammar syllabus, language-specific deep-dive types, and watch-outs.
+### Step 1: Dispatch the Tutor
 
-Once the target language is resolved:
+On every user message after activation, call the Agent tool with `subagent_type: "lang-tutor:tutor"` and `run_in_background: false`. Send it in the same message as your first task tool calls so it runs in parallel, unless this turn writes `~/.lang-tutor/prefs.md` — then dispatch only after that write has finished; if the turn needs no tools, send it alone first. Prompt:
 
-1. Read `languages/_common.md`.
-2. Load `languages/english.md` for English or `languages/japanese.md` for Japanese, using the validated target above.
-3. There is no generic fallback. Never create another language guide or tutor an unsupported target.
+```
+guides_dir: <absolute path of this skill's languages/ directory>
+date: <today, YYYY-MM-DD>
+<message>
+<the user's own words, verbatim; replace pasted code or logs with [code omitted]>
+</message>
+```
 
-**Composition rule**: `_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing. The language guide may add rows to the level tables, add deep-dive types to the rotation, and narrow any general instruction to something more specific.
+`guides_dir` is the `languages/` directory under this skill's base directory, or the path given in the lang-tutor hook reminder.
 
-Read both guides once at activation. If the user switches target language mid-session, validate the new target with the same allowlist before updating `~/.lang-tutor/prefs.md`, then read its guide before your next response (`_common.md` stays loaded). Follow the loaded guides for every response.
+### Step 2: Paste the Block
 
-## Your Behavior for Every Response This Session
-
-### Step 0: Confirm Session State
-
-Before writing anything else, silently recall and lock in:
-- **Target language**: the language the user is learning
-- **Native language**: Traditional Chinese (zh-TW)
-- **Proficiency level**: beginner / intermediate / advanced
-- **Guides**: confirm you have read both `languages/_common.md` and this language's guide from `languages/`; if not, read them now
-
-If you are uncertain about any of these, check `~/.lang-tutor/prefs.md` before continuing. This mode is **active for the entire session** — it does not expire after many exchanges, long silences, or complex coding tasks.
-
-### Step 1: Detect Language and Pick the Mode
-
-Before outputting anything, explicitly identify which language the message is written in by stating internally: *"This message is written in: [language]."* Only after confirming this should you choose the feedback mode:
-
-- **TARGET language** → use **Language Feedback** mode (Mode 1)
-- **NATIVE language** → use **Translation & Breakdown** mode (Mode 2)
-- **Mixed message** → use judgment:
-  - Mostly target language with a few native words: Language Feedback mode, including translations of the native words
-  - Mostly native language with a few target words: Translation & Breakdown mode
-  - Roughly even split: default to Language Feedback mode — encourage target-language use
-
-### Step 2: Proficiency Detection & Adjustment
-
-When no level was provided, analyze the user's vocabulary range, grammar complexity, and error patterns. After the first 2-3 messages, settle on a level and mention it once: `"I'm calibrating to [level] level based on your writing."` Apply the level-specific depth tables from both guides — the baseline rows in `_common.md` plus the grammar-focus row the language guide adds.
+Put the agent's result **verbatim** at the very top of your reply, before anything else. Do not edit, summarize, or comment on it. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence.
 
 ### Step 3: Execute the Actual Request
 
-After the feedback block, proceed to handle the user's actual coding/task request **exactly as you normally would**. The language feedback is an addition, not a replacement. Do your full job as your coding assistant — write code, debug, explain, search files, etc.
+After the block, handle the user's actual request **exactly as you normally would**. The language feedback is an addition, not a replacement; the task response must be just as thorough as without this mode.
 
 ## Important Rules
 
-- **Never skip the feedback block**, even if the user's language is perfect — in that case, just offer a brief compliment
-- **Do not drift** — lang-tutor mode does not wear off after many exchanges, long silences, or back-to-back coding tasks. If you notice you skipped the feedback block in a prior response, re-engage immediately on the current message without dwelling on the lapse
-- **Keep feedback concise** — no more than 5-6 lines for Language Feedback, slightly more for Translation & Breakdown
-- **Do not let tutoring interfere with task quality** — the coding/task response should be just as thorough as without this mode
-- **If the user writes in a third language** (neither target nor native), ask whether they want to practice English or Japanese; keep explanations in Traditional Chinese
-- **Respect the user's flow** — if a message is very short (e.g., "yes", "ok", "run it"), a one-line feedback note or just encouragement is sufficient
-- **Keep level calibration consistent** across both feedback modes
-- **Typing shortcuts are not mistakes** — the user is typing into a terminal while working, not writing prose. None of the following is an error, and none of them may be corrected, mentioned, or written to the log:
-  - **Missing accents and diacritics** — "nao" for "não", "cafe" for "café"
-  - **Dropped apostrophes in contractions** — "ill" for "I'll", "dont" for "don't", "wont", "cant", "its" for "it's", "im", "youre", "were", "thats", "lets". Read them as the contraction and move on
-  - **Lowercase `i`** for the pronoun "I", and lowercase sentence openings
-  - **Engineering shorthand** — impl, repo, env, config, deps, args, params, docs, msg, req/res, db, auth, spec, perf, prod, dev, infra, util, dir, ctx, err, pkg, lib, cmd, src, tmp, regex, PR, MR, CI, k8s, API, CLI, SDK, and any other standard abbreviation of a technical term
-  - **Chat shorthand** — u, r, ur, plz, thx, btw, imo, afaik, tbh, fyi, asap, lgtm, wip, ptal, nit
-  Correct only genuine grammar, word choice, or structure mistakes. If the shortened form is genuinely ambiguous in context, ask what was meant instead of treating it as an error.
-- **Do not turn a shortcut into a teaching point** — no "this is fine in chat but not in a document" asides. The user has already decided; repeating it is noise.
+- **Never skip the dispatch**, even for a one-word message — the agent decides how short the block should be
+- **Do not drift** — if you notice you skipped the block in a prior response, dispatch on the current message without dwelling on the lapse
+- If the user switches target language mid-session, validate it with the same allowlist and update `~/.lang-tutor/prefs.md` before dispatching; the agent reads prefs on every call

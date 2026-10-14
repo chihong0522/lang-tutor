@@ -49,17 +49,27 @@ if [ -n "${PLUGIN_DATA:-}" ] && [ -n "$session_id" ]; then
   esac
 
   [ -f "$state_file" ] || exit 0
+  host=codex
 else
   # Claude Code exposes the transcript marker after loading the skill.
   transcript="$(json_field transcript_path)"
   [ -n "$transcript" ] && [ -f "$transcript" ] || exit 0
   grep -q 'Language Tutor Mode' "$transcript" 2>/dev/null || exit 0
+  host=claude
 fi
 
 # Preferences are shared by both supported hosts; do not use Claude auto-memory.
 prefs=""
 if [ -f "$HOME/.lang-tutor/prefs.md" ]; then
   prefs="$(tr '\n' ' ' < "$HOME/.lang-tutor/prefs.md")"
+fi
+
+# Claude Code runs the tutoring in the lang-tutor:tutor subagent to keep the guides out of the main context.
+if [ "$host" = claude ]; then
+  guides=""
+  [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && guides=" (guides_dir: $CLAUDE_PLUGIN_ROOT/skills/lang-tutor/languages)"
+  printf 'Reminder: lang-tutor mode is active in this session. Dispatch the lang-tutor:tutor agent (run_in_background: false) with this message%s, paste its block verbatim at the top of your reply, then handle the request normally. %s\n' "$guides" "${prefs:+Saved preferences: $prefs}"
+  exit 0
 fi
 
 printf 'Reminder: lang-tutor mode is active in this session. Before handling this message, apply the lang-tutor skill: detect the message language, use the loaded guides (languages/_common.md plus the target language guide), give concise feedback in Traditional Chinese, then handle the request normally. If the guide contents are no longer available in context, read them from the installed skill. %s\n' "${prefs:+Saved preferences: $prefs}"

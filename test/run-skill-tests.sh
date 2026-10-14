@@ -52,7 +52,7 @@ run_claude() {
     --plugin-dir "$REPO_DIR" \
     --add-dir "$SKILL_DIR" \
     --output-format stream-json --verbose \
-    --allowedTools "Read,Write,Edit" \
+    --allowedTools "Read,Write,Edit,Agent" \
     --permission-mode acceptEdits \
     ${2:+--resume "$2"} >"$OUT" 2>"$OUT.err"
   if [ $? -ne 0 ]; then
@@ -79,10 +79,12 @@ assert_read() {
     | select(.input.file_path // "" | contains($frag))
     | .id' "$OUT" 2>/dev/null)"
   for id in $ids; do
-    if jq -e --arg id "$id" '
-      select(.type == "user")
-      | .message.content[]?
-      | select(.type == "tool_result" and .tool_use_id == $id and (.is_error != true))' \
+    if jq -en --arg id "$id" '
+      [inputs
+       | select(.type == "user")
+       | .message.content[]?
+       | select(.type == "tool_result" and .tool_use_id == $id and (.is_error != true))]
+      | length > 0' \
       "$OUT" >/dev/null 2>&1; then
       echo "  ok: read $1"
       return 0
@@ -122,12 +124,13 @@ run_test() {
 # --- tests -------------------------------------------------------------------
 
 # Explicit args route to the right language guide, and the shared spine loads
-# alongside it. Both files are required: _common.md carries the feedback block
+# alongside it (read by the tutor subagent on the first message). Both files are required: _common.md carries the feedback block
 # formats, the deep-dive rotation, and the Irregularity Watch, so a skill that
 # loaded only the language guide would look correct here but tutor incorrectly.
 test_routing() {
   new_env
   run_claude "$SKILL English Beginner" || return 1
+  run_claude "I wants to learn English" "$SESSION_ID" || return 1
   assert_read "languages/_common.md" || return 1
   assert_read "languages/english.md" || return 1
 }
@@ -136,6 +139,7 @@ test_routing() {
 test_alias() {
   new_env
   run_claude "$SKILL 日本語 Beginner" || return 1
+  run_claude "私は日本語を勉強するです" "$SESSION_ID" || return 1
   assert_read "languages/_common.md" || return 1
   assert_read "languages/japanese.md" || return 1
 }
@@ -175,11 +179,9 @@ test_memory() {
     return 1
   fi
   echo "  ok: preferences saved to $PREFS_FILE, auto-memory untouched"
-  # New session (no resume), bare invocation: must load saved prefs and
-  # read both the spine and the English guide again.
+  # New session (no resume), bare invocation: must load the saved prefs.
   run_claude "$SKILL" || return 1
-  assert_read "languages/_common.md" || return 1
-  assert_read "languages/english.md" || return 1
+  assert_read ".lang-tutor/prefs.md" || return 1
 }
 
 # --- main --------------------------------------------------------------------
@@ -187,17 +189,18 @@ test_memory() {
 ALL_TESTS="routing alias unsupported modes memory"
 TESTS="${*:-$ALL_TESTS}"
 
-# The skill writes preferences to a fixed path under $HOME, so a test run would
-# otherwise overwrite the real user's settings. Snapshot and restore them.
-PREFS_FILE="$HOME/.lang-tutor/prefs.md"
-PREFS_BACKUP="$(mktemp /tmp/lang-tutor-prefs-backup.XXXXXX)"
-if [ -f "$PREFS_FILE" ]; then
-  cp "$PREFS_FILE" "$PREFS_BACKUP"
-  restore_prefs() { cp "$PREFS_BACKUP" "$PREFS_FILE"; rm -f "$PREFS_BACKUP"; }
+# The skill writes prefs, logs and rotation state under a fixed $HOME path, so a
+# test run would otherwise pollute the real user's data. Snapshot and restore it.
+STATE_DIR="$HOME/.lang-tutor"
+PREFS_FILE="$STATE_DIR/prefs.md"
+STATE_BACKUP="$(mktemp -d /tmp/lang-tutor-state-backup.XXXXXX)"
+if [ -d "$STATE_DIR" ]; then
+  cp -a "$STATE_DIR/." "$STATE_BACKUP/"
+  restore_state() { rm -rf "$STATE_DIR"; mkdir -p "$STATE_DIR"; cp -a "$STATE_BACKUP/." "$STATE_DIR/"; rm -rf "$STATE_BACKUP"; }
 else
-  restore_prefs() { rm -f "$PREFS_FILE" "$PREFS_BACKUP"; }
+  restore_state() { rm -rf "$STATE_DIR" "$STATE_BACKUP"; }
 fi
-trap restore_prefs EXIT
+trap restore_state EXIT
 
 echo "model: $MODEL"
 for t in $TESTS; do
