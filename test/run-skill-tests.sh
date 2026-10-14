@@ -52,7 +52,7 @@ run_claude() {
     --plugin-dir "$REPO_DIR" \
     --add-dir "$SKILL_DIR" \
     --output-format stream-json --verbose \
-    --allowedTools "Read,Write,Edit,Agent" \
+    --allowedTools "Read,Write,Edit,Glob,Agent" \
     --permission-mode acceptEdits \
     ${2:+--resume "$2"} >"$OUT" 2>"$OUT.err"
   if [ $? -ne 0 ]; then
@@ -144,6 +144,16 @@ test_alias() {
   assert_read "languages/japanese.md" || return 1
 }
 
+# A wrong guides_dir must not yield an improvised block: the agent falls back to
+# the installed guides (or answers NEED_GUIDES).
+test_bad_guides_dir() {
+  new_env
+  run_claude "$SKILL English Beginner" || return 1
+  run_claude "Dispatch the lang-tutor:tutor agent now with guides_dir: /nonexistent/languages and this message: I wants to learn English" "$SESSION_ID" || return 1
+  assert_read "languages/_common.md" || return 1
+  assert_response_contains "語言回饋" || return 1
+}
+
 # Unsupported targets must not activate tutoring or alter saved preferences.
 test_unsupported() {
   new_env
@@ -186,7 +196,7 @@ test_memory() {
 
 # --- main --------------------------------------------------------------------
 
-ALL_TESTS="routing alias unsupported modes memory"
+ALL_TESTS="routing alias unsupported modes memory bad_guides_dir"
 TESTS="${*:-$ALL_TESTS}"
 
 # The skill writes prefs, logs and rotation state under a fixed $HOME path, so a

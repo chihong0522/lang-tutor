@@ -46,11 +46,11 @@ date: <today, YYYY-MM-DD>
 </message>
 ```
 
-`guides_dir` is the `languages/` directory under this skill's base directory, or the path given in the lang-tutor hook reminder.
+Copy `guides_dir` character for character from the lang-tutor hook reminder, or from this skill's base directory plus `/languages`. Never compose or shorten it; if neither source is in context, omit the line and the agent locates the guides itself.
 
 ### Step 2: Paste the Block
 
-Put the agent's result **verbatim** at the very top of your reply, before anything else. Do not edit, summarize, or comment on it. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence.
+Put the agent's result **verbatim** at the very top of your reply, before anything else. Do not edit, summarize, or comment on it. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
 
 ### Step 3: Execute the Actual Request
 

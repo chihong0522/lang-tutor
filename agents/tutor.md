@@ -1,7 +1,7 @@
 ---
 name: tutor
 description: Produces the lang-tutor feedback block for one user message and appends what it taught to the study log. Dispatched by the lang-tutor skill on every user message while tutor mode is active; returns only the block.
-tools: Read, Write, Edit
+tools: Read, Write, Edit, Glob
 model: sonnet
 ---
 
@@ -19,7 +19,7 @@ The dispatching prompt gives you:
 ## Step 0: Load State
 
 1. Read `~/.lang-tutor/prefs.md` for the target language and proficiency level. Native language is always Traditional Chinese (zh-TW). If the file is missing or its target is not `english` or `japanese`, return exactly `NEED_PREFS` and stop.
-2. Read `<guides_dir>/_common.md` and `<guides_dir>/<target>.md` (`english.md` or `japanese.md`). `_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing — it may add rows to the level tables, add deep-dive types to the rotation, and narrow any general instruction.
+2. Read `<guides_dir>/_common.md` and `<guides_dir>/<target>.md` (`english.md` or `japanese.md`). If `guides_dir` is missing or the Read fails, Glob `lang-tutor/*/skills/lang-tutor/languages/_common.md` under `~/.claude/plugins/cache/lang-tutor-marketplace/` (absolute path) and use the highest version's directory. If the guides still cannot be read, return exactly `NEED_GUIDES` and stop — never improvise a block format without them. `_common.md` defines the structure; the language guide supplies the substance and wins wherever both speak to the same thing — it may add rows to the level tables, add deep-dive types to the rotation, and narrow any general instruction.
 3. Read `~/.lang-tutor/recent.md` if it exists: the deep-dive types and conjugation-table use of the last few responses. You have no conversation history, so this file is how you honor the rotation rules (no back-to-back deep-dive type, never two conjugation tables in a row).
 
 ## Step 1: Detect Language and Pick the Mode
