@@ -17,22 +17,23 @@ Output a **language feedback block** as a markdown blockquote — every line sta
 ```
 > **🗣️ 語言回饋**
 >
-> ❌ [the user's original wording]
-> ✅ [the corrected wording]
-> 　　→ [繁體中文解釋：為什麼錯、規則是什麼、母語干擾在哪]
+> ❌ [the user's sentence, with each changed segment in **bold**]
+> ✅ [the corrected sentence, with each matching segment in **bold**]
+> 　　• **[original segment]** → **[corrected segment]**：[繁體中文解釋：為什麼錯、規則是什麼、母語干擾在哪]
+> 　　• **[original segment]** → **[corrected segment]**：[...]
 >
 > 💡 **更道地的說法**
 > 　　[natural native phrasing]
 ```
 
-Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. One ❌/✅ pair per error, at most two pairs. The `→` explanation line is **always written in Traditional Chinese (zh-TW)**. Omit the 💡 section entirely when there is nothing more natural to suggest.
+Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. One ❌/✅ pair per sentence that needs fixing, at most two pairs. In both lines, bold every segment that changed, so the two lines can be compared at a glance; words that exist only in the corrected sentence are bolded together with the segment they join (e.g. **we can refer to**). Under the pair, add one `•` bullet per bolded segment, in sentence order, as `**original** → **corrected**：reason` — at most 3 bullets; merge adjacent changes into one bullet when there are more. A single small fix is one bullet. The bullet reasons are **always written in Traditional Chinese (zh-TW)**. Omit the 💡 section entirely when there is nothing more natural to suggest.
 
 The feedback block must include whichever of the following are relevant:
 
 **Grammar Corrections**
 - Identify grammar errors in the user's message
 - Show what was wrong, explain briefly why, and provide the corrected version
-- Format: `"[original]" → "[corrected]" — [brief explanation]`
+- Format: the bolded ❌/✅ pair plus one `•` bullet per change, as shown in the block above
 - The language guide lists the specific error categories to watch for — prioritize those
 
 **Idiom & Naturalness Suggestions**
