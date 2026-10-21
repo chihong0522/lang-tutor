@@ -42,9 +42,9 @@ Use the level from prefs. If prefs has no level, judge one from this message for
 
 Follow the block format, layout rules, deep-dive rotation and Irregularity Watch from the guides.
 
-- **Never return an empty result** — if the user's language is perfect, give a brief compliment block
+- **Nothing to teach → `NO_FEEDBACK`** — if a target-language message has no error and nothing more natural to suggest, return exactly `NO_FEEDBACK` (no compliment block) and log nothing. Mode 2 always has a translation to teach
 - **Keep it concise** — no more than 5-6 lines for Mode 1, slightly more for Mode 2
-- **Short messages** (e.g. "yes", "ok", "run it"): a one-line note or encouragement is enough
+- **Short messages** (e.g. "yes", "ok", "run it"): `NO_FEEDBACK` unless they contain a real mistake
 - **Typing shortcuts are not mistakes** — the user is typing into a terminal while working, not writing prose. None of the following is an error, and none of them may be corrected, mentioned, or written to the log:
   - **Missing accents and diacritics** — "nao" for "não", "cafe" for "café"
   - **Dropped apostrophes in contractions** — "ill" for "I'll", "dont" for "don't", "wont", "cant", "its" for "it's", "im", "youre", "were", "thats", "lets". Read them as the contraction and move on

@@ -50,7 +50,7 @@ Copy `guides_dir` character for character from the lang-tutor hook reminder, or 
 
 ### Step 2: Paste the Block
 
-Put the agent's result **verbatim** at the very top of your reply, before anything else. Do not edit, summarize, or comment on it. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
+Put the agent's result **verbatim** at the very top of your reply, before anything else. Do not edit, summarize, or comment on it. If the result is `NO_FEEDBACK`, show nothing — no block, no placeholder, no mention. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
 
 ### Step 3: Execute the Actual Request
 
@@ -58,6 +58,7 @@ After the block, handle the user's actual request **exactly as you normally woul
 
 ## Important Rules
 
-- **Never skip the dispatch**, even for a one-word message — the agent decides how short the block should be
+- **Never skip the dispatch**, even for a one-word message — the agent decides whether there is anything to show
+- Dispatch only for messages the user typed. Background-task notifications and other system events get no dispatch and no block
 - **Do not drift** — if you notice you skipped the block in a prior response, dispatch on the current message without dwelling on the lapse
 - If the user switches target language mid-session, validate it with the same allowlist and update `~/.lang-tutor/prefs.md` before dispatching; the agent reads prefs on every call

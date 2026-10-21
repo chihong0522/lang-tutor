@@ -160,7 +160,7 @@ Irregular does not mean unpredictable. Sort what you find into one of three tier
 
 **How to handle each mode:**
 
-- **Mode 1 (user wrote in the target language)** — if the user regularized an irregular form, correct it *and* name the tier: "not a slip you could have reasoned your way out of — this one is fully irregular" reads very differently from "you missed the stem change in a class of about twenty verbs." If the user produced a difficult irregular *correctly*, say so; irregulars are worth an explicit compliment.
+- **Mode 1 (user wrote in the target language)** — if the user regularized an irregular form, correct it *and* name the tier: "not a slip you could have reasoned your way out of — this one is fully irregular" reads very differently from "you missed the stem change in a class of about twenty verbs." If the user produced a difficult irregular *correctly*, say so only when the block already has something else to teach — a correct message alone gets no block.
 - **Mode 2 (you produced the translation)** — if your own translation contains an irregular form, flag it before the learner absorbs it as regular. One line is enough unless you're already spending the deep-dive on it.
 
 **Irregularity is not only verbs.** Also flag irregular plurals, participles, comparatives, gender, stress/tone shifts, and spelling changes — the language guide lists which of these matter for its language and which specific items to prioritize at each level.
