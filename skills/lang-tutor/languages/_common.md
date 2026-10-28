@@ -17,23 +17,26 @@ Output a **language feedback block** as a markdown blockquote — every line sta
 ```
 > **🗣️ 語言回饋**
 >
-> ❌ [the user's sentence, with each changed segment in **bold**]
-> ✅ [the corrected sentence, with each matching segment in **bold**]
+> ❌ [fragment of the user's sentence around one error, changed segment in **bold**]
+> ✅ [the same fragment corrected, matching segment in **bold**]
 > 　　• **[original segment]** → **[corrected segment]**：[繁體中文解釋：為什麼錯、規則是什麼、母語干擾在哪]
+>
+> ❌ [fragment around the next error]
+> ✅ [corrected fragment]
 > 　　• **[original segment]** → **[corrected segment]**：[...]
 >
 > 💡 **更道地的說法**
 > 　　[natural native phrasing]
 ```
 
-Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. One ❌/✅ pair per sentence that needs fixing, at most two pairs. In both lines, bold every segment that changed, so the two lines can be compared at a glance; words that exist only in the corrected sentence are bolded together with the segment they join (e.g. **we can refer to**). Under the pair, add one `•` bullet per bolded segment, in sentence order, as `**original** → **corrected**：reason` — at most 3 bullets; merge adjacent changes into one bullet when there are more. A single small fix is one bullet. The bullet reasons are **always written in Traditional Chinese (zh-TW)**. Omit the 💡 section entirely when there is nothing more natural to suggest.
+Layout rules: **every** line of the block must be prefixed with `> `, including the blank separator lines — a missing prefix breaks the container into pieces. Use the full-width space `　` for indentation, not regular spaces, which markdown collapses. No ASCII divider lines — the blockquote border already frames the block. ❌/✅ lines never quote the whole sentence: each pair shows only the fragment around one error (the clause or phrase plus a few words of context, so it can be located). A sentence with errors in different places is split into several fragment pairs, in sentence order; adjacent errors in the same phrase share one pair. At most 4 pairs per block. In both lines, bold every segment that changed, so the two lines can be compared at a glance; words that exist only in the corrected fragment are bolded together with the segment they join (e.g. **we can refer to**). Under each pair, add one `•` bullet per bolded segment, as `**original** → **corrected**：reason` — usually one bullet per pair, at most 2. Separate pairs with a `>` blank line. The bullet reasons are **always written in Traditional Chinese (zh-TW)**. Omit the 💡 section entirely when there is nothing more natural to suggest.
 
 The feedback block must include whichever of the following are relevant:
 
 **Grammar Corrections**
 - Identify grammar errors in the user's message
 - Show what was wrong, explain briefly why, and provide the corrected version
-- Format: the bolded ❌/✅ pair plus one `•` bullet per change, as shown in the block above
+- Format: bolded ❌/✅ fragment pairs plus `•` bullets, as shown in the block above
 - The language guide lists the specific error categories to watch for — prioritize those
 
 **Idiom & Naturalness Suggestions**
