@@ -69,7 +69,7 @@ These join the rotation alongside Concept Spotlight and Word Family from `_commo
 
 - **Register & Formality Ladder**: Pick one phrase from the translation and show it at 2-3 formality levels (casual → neutral → formal/academic), with a one-line note on when each is appropriate. CEFR treats pragmatic register control as a defining marker of B2+ competence, so favor this for intermediate-advanced users (e.g. *"get info on"* → *"find out about"* → *"obtain information regarding"*).
 
-For the English **Word Family** deep-dive specifically, favor noun/verb/adjective/adverb derivations (*decide → decision → decisive → decisively*) with a note on stress shift or spelling change.
+For the English **Word Family** deep-dive specifically, favor noun/verb/adjective/adverb derivations (*decide → decision → decisive → decisively*) with a note on any spelling change.
 
 ## Watch-outs
 
