@@ -68,7 +68,7 @@ fi
 if [ "$host" = claude ]; then
   guides=""
   [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && guides=" (guides_dir: $CLAUDE_PLUGIN_ROOT/skills/lang-tutor/languages)"
-  printf 'Reminder: lang-tutor mode is active in this session. Dispatch the lang-tutor:tutor agent (run_in_background: false) with this message%s, paste its block verbatim at the top of your reply, then handle the request normally. %s\n' "$guides" "${prefs:+Saved preferences: $prefs}"
+  printf 'Reminder: lang-tutor mode is active in this session. Dispatch the lang-tutor:tutor agent (run_in_background: true) as your first tool call with this message%s, handle the request normally without waiting, and when its notification arrives reply with its block verbatim as a message of its own. %s\n' "$guides" "${prefs:+Saved preferences: $prefs}"
   exit 0
 fi
 

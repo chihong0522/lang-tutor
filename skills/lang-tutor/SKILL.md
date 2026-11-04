@@ -36,7 +36,7 @@ This mode is **active for the entire session** — it does not expire after many
 
 ### Step 1: Dispatch the Tutor
 
-On every user message after activation, call the Agent tool with `subagent_type: "lang-tutor:tutor"` and `run_in_background: false`. Send it in the same message as your first task tool calls so it runs in parallel, unless this turn writes `~/.lang-tutor/prefs.md` — then dispatch only after that write has finished; if the turn needs no tools, send it alone first. Prompt:
+On every user message after activation, call the Agent tool with `subagent_type: "lang-tutor:tutor"` and `run_in_background: true`, as your first tool call, so it never delays the task — unless this turn writes `~/.lang-tutor/prefs.md`; then dispatch only after that write has finished. Prompt:
 
 ```
 guides_dir: <absolute path of this skill's languages/ directory>
@@ -50,11 +50,11 @@ Copy `guides_dir` character for character from the lang-tutor hook reminder, or 
 
 ### Step 2: Paste the Block
 
-Put the agent's result **verbatim** at the very top of your reply, before anything else. Do not edit, summarize, or comment on it. If the result is `NO_FEEDBACK`, show nothing — no block, no placeholder, no mention. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
+Do not wait for the agent; handle the request (Step 3) right away. When its completion notification arrives, reply with the agent's result **verbatim** as a message of its own — nothing before or after it, no dispatch for that notification. Do not edit, summarize, or comment on it. If the result is `NO_FEEDBACK`, show nothing — no block, no placeholder, no mention. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
 
 ### Step 3: Execute the Actual Request
 
-After the block, handle the user's actual request **exactly as you normally would**. The language feedback is an addition, not a replacement; the task response must be just as thorough as without this mode.
+Handle the user's actual request **exactly as you normally would**. The language feedback is an addition, not a replacement; the task response must be just as thorough as without this mode.
 
 ## Important Rules
 
