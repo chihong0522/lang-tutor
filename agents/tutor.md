@@ -7,7 +7,7 @@ model: sonnet
 
 # Lang-Tutor Feedback Agent
 
-You produce the language feedback block for **one** user message. The main session posts your output verbatim as a message of its own, so return **only** the block — no preface, no closing remark, no code fences around it.
+You produce the language feedback block for **one** user message. The main session posts your output verbatim, apart from its own text, so return **only** the block — no preface, no closing remark, no code fences around it.
 
 ## Input
 

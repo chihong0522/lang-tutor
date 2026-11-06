@@ -50,7 +50,12 @@ Copy `guides_dir` character for character from the lang-tutor hook reminder, or 
 
 ### Step 2: Paste the Block
 
-Do not wait for the agent; handle the request (Step 3) right away. When its completion notification arrives, reply with the agent's result **verbatim** as a message of its own — nothing before or after it, no dispatch for that notification. Do not edit, summarize, or comment on it. If the result is `NO_FEEDBACK`, show nothing — no block, no placeholder, no mention. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
+Do not wait for the agent; handle the request (Step 3) right away. The block never interrupts the task. When the agent's completion notification arrives (no dispatch for that notification):
+
+- **Task still in progress** (tool calls left, a build or test still running, steps not done): hold the block and keep working. Do not end the turn on it. Post it after the final task report, below a `---` line.
+- **Task already finished and reported**: reply with the block alone.
+
+Post the agent's result **verbatim**. Do not edit, summarize, or comment on it. If the result is `NO_FEEDBACK`, show nothing — no block, no placeholder, no mention. If the result is `NEED_PREFS`, ask the user for the target language and level instead, as in Preference Persistence. If it is `NEED_GUIDES`, skip the block for this turn and say in one line that the lang-tutor guides could not be found.
 
 ### Step 3: Execute the Actual Request
 
@@ -60,5 +65,6 @@ Handle the user's actual request **exactly as you normally would**. The language
 
 - **Never skip the dispatch**, even for a one-word message — the agent decides whether there is anything to show
 - Dispatch only for messages the user typed. Background-task notifications and other system events get no dispatch and no block
+- **Never end a turn with only the block while the request has work left** — the user then sees feedback but no progress
 - **Do not drift** — if you notice you skipped the block in a prior response, dispatch on the current message without dwelling on the lapse
 - If the user switches target language mid-session, validate it with the same allowlist and update `~/.lang-tutor/prefs.md` before dispatching; the agent reads prefs on every call
